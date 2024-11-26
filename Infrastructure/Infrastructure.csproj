@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Helpers\" />
     <Folder Include="Factories\" />
-    <Folder Include="Data\" />
-    <Folder Include="Contexts\" />
     <Folder Include="Services\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
