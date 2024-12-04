@@ -1,4 +1,5 @@
 using Infrastructure.Contexts;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
+builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<TableRepository>();
+builder.Services.AddScoped<RestaurantRepository>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
