@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250109124832_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,13 +45,13 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TableChairId")
+                    b.Property<string>("SeatingId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TableChairId");
+                    b.HasIndex("SeatingId");
 
                     b.ToTable("Bookings");
                 });
@@ -67,10 +70,6 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Milk")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RestaurantId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("Vegan")
                         .HasColumnType("bit");
 
@@ -78,8 +77,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
 
                     b.ToTable("Chairs");
                 });
@@ -100,6 +97,28 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Restaurants");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.SeatingEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RestaurantId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TableChairId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.HasIndex("TableChairId");
+
+                    b.ToTable("Seatings");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
@@ -148,24 +167,32 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Entities.BookingEntity", b =>
                 {
-                    b.HasOne("Infrastructure.Entities.TableChairEntity", "TableChair")
+                    b.HasOne("Infrastructure.Entities.SeatingEntity", "Seating")
                         .WithMany("Bookings")
-                        .HasForeignKey("TableChairId")
+                        .HasForeignKey("SeatingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TableChair");
+                    b.Navigation("Seating");
                 });
 
-            modelBuilder.Entity("Infrastructure.Entities.ChairEntity", b =>
+            modelBuilder.Entity("Infrastructure.Entities.SeatingEntity", b =>
                 {
                     b.HasOne("Infrastructure.Entities.RestaurantEntity", "Restaurant")
-                        .WithMany()
+                        .WithMany("Seatings")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Infrastructure.Entities.TableChairEntity", "TableChair")
+                        .WithMany("Seatings")
+                        .HasForeignKey("TableChairId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Restaurant");
+
+                    b.Navigation("TableChair");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
@@ -205,12 +232,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Entities.RestaurantEntity", b =>
                 {
+                    b.Navigation("Seatings");
+
                     b.Navigation("Tables");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.SeatingEntity", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
                 {
-                    b.Navigation("Bookings");
+                    b.Navigation("Seatings");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableEntity", b =>

@@ -3,7 +3,7 @@ using Infrastructure.Entities;
 
 namespace Infrastructure.Repositories;
 
-public class OrderRepository(DataContext context) : BaseRepository<OrderEntity>(context)
+public class BookingRepository(DataContext context) : BaseRepository<BookingEntity>(context)
 {
     private readonly DataContext _context = context;
 }

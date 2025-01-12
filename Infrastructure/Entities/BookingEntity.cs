@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Entities;
 
-public class OrderEntity
+public class BookingEntity
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -11,5 +12,8 @@ public class OrderEntity
     public string BookerEmail { get; set; } = null!;
     public string BookerPhone { get; set; } = null!;
 
-    public TableEntity Table { get; set; } = null!;
+    public string TableChairId { get; set; } = null!;
+
+    [ForeignKey("TableChairId")]
+    public TableChairEntity TableChair { get; set; } = null!;
 }

@@ -9,7 +9,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
-builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<BookingRepository>();
 builder.Services.AddScoped<TableRepository>();
 builder.Services.AddScoped<RestaurantRepository>();
 
