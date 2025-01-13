@@ -1,35 +1,28 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
-using Microsoft.AspNetCore.Http;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RestaurantController(RestaurantRepository restaurantRepository) : ControllerBase
+public class RestaurantController(RestaurantRepository restaurantRepository, RestaurantService restaurantService) : ControllerBase
 {
+    private readonly RestaurantService _restaurantService = restaurantService;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
 
     [HttpPost]
     public async Task<IActionResult> Create(RestaurantModel model)
     {
-        //INTE KLAR, FLYTTA TILL SERVICE
         if (ModelState.IsValid) 
         {
-            var restaurantEntity = new RestaurantEntity
-            {
-                Name = model.RestaurantName,
-                Location = model.Location,
-            };
-
-            var createResult = await _restaurantRepository.CreateAsync(restaurantEntity);
+            var createResult = await _restaurantService.CreateRestaurantAsync(model);
 
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
                 return Created($"/api/restaurant/{createResult.Content}", createResult.Content);
             
-            //FIXA SERVICE, FINNS INTE EXISTS I CREATERESULT.
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.EXISTS)
                 return Conflict();
         }

@@ -7,6 +7,7 @@ public class ChairEntity
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string? Name { get; set; }
     public bool Vegan { get; set; }
     public bool Vegetarian { get; set; }
     public bool Milk { get; set; }

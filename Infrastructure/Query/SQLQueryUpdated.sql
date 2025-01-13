@@ -82,25 +82,40 @@ INSERT INTO TablesChairs VALUES ('Jensens-8man-7', 93, 37)
 INSERT INTO TablesChairs VALUES ('Jensens-8man-8', 93, 38)
 
 
--- FORTSÄTT HÄR NÄSTA GÅNG (9/1-25)
-
--- Bokar bord 1 på Italli
-INSERT INTO Bookings VALUES (1, '20120618 10:34', 'Robin', 'Robin@domain.com', '0760373111', 'Michaelangelo-8man-1')
+-- Bokar 8man på Italli
+INSERT INTO Bookings VALUES (1, '20120618 10:34', 'Robin', 'Robin@domain.com', '0760373111', 'Italli-8man-1','20120718 18:00','20120718 23:00','Mycket mat tack')
 
 -- Plocka fram hela bokningen
 SELECT 
     b.Id AS BookingId,
-    b.CreatedDate,
     b.BookerName,
     b.BookerEmail,
     b.BookerPhone,
+    b.SpecialRequests,
+    b.CreatedDate AS BookingCreatedDate,
     t.Id AS TableId,
     t.Size AS TableSize,
     t.IsBooked,
     r.Id AS RestaurantId,
     r.Name AS RestaurantName,
-    r.Location AS RestaurantLocation
-FROM Orders o
-INNER JOIN Tables t ON o.TableId = t.Id
-INNER JOIN Restaurants r ON t.RestaurantId = r.Id
-WHERE o.Id = '1';
+    r.Location AS RestaurantLocation,
+    c.Id AS ChairId,
+    c.Vegan,
+    c.Vegetarian,
+    c.Milk,
+    c.Eggs,
+    c.Gluten
+FROM 
+    Bookings b
+JOIN 
+    TablesChairs tcBooked ON b.TableChairId = tcBooked.Id
+JOIN 
+    Tables t ON tcBooked.TableId = t.Id
+JOIN 
+    Restaurants r ON t.RestaurantId = r.Id
+JOIN 
+    TablesChairs tc ON tc.TableId = t.Id
+JOIN 
+    Chairs c ON tc.ChairId = c.Id
+WHERE 
+    b.Id = 1;

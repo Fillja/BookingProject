@@ -2,9 +2,11 @@
 
 namespace Infrastructure.Models;
 
-public class OrderModel
+public class BookingModel
 {
-    public DateTime OrderDate { get; set; } = DateTime.Now;
+    public DateTime BookingDate { get; set; } = DateTime.Now;
+    public DateTime BookingStartTime { get; set; }
+    public DateTime BookingEndTime { get; set; }
 
     [Required]
     public string BookerName { get; set; } = null!;
@@ -15,5 +17,9 @@ public class OrderModel
 
     [Required]
     [RegularExpression("^(?:\\+46|0)7\\d{8}$")]
-    public string BookerPhone { get; set;} = null!;
+    public string BookerPhone { get; set; } = null!;
+
+    public string? SpecialRequests { get; set; }
+
+    public TableChairsModel BookedTable { get; set; } = new TableChairsModel();
 }
