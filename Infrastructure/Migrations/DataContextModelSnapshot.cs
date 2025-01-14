@@ -59,7 +59,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TableChairId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.ChairEntity", b =>
@@ -93,7 +93,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Chairs");
+                    b.ToTable("Chairs", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.RestaurantEntity", b =>
@@ -111,7 +111,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurants");
+                    b.ToTable("Restaurants", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
@@ -133,7 +133,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TableId");
 
-                    b.ToTable("TablesChairs");
+                    b.ToTable("TablesChairs", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableEntity", b =>
@@ -158,7 +158,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Tables");
+                    b.ToTable("Tables", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.BookingEntity", b =>

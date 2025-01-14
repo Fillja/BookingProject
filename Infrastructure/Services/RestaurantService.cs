@@ -14,7 +14,7 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
     {
         var existResult = await _restaurantRepository.ExistsAsync(x => x.Name == model.RestaurantName);
         if (existResult.StatusCode == StatusCode.EXISTS)
-            return ResponseFactory.Exists();
+            return ResponseFactory.Exists("That entity already exists.");
 
         var restaurantEntity = new RestaurantEntity
         {
@@ -26,6 +26,31 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
 
         if (createResult.StatusCode == StatusCode.OK)
             return ResponseFactory.Ok(createResult);
+
+        return ResponseFactory.BadRequest();
+    }
+
+    public async Task<ResponseResult> UpdateRestaurantAsync(RestaurantModel model, string id)
+    {
+        var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
+
+        if (getResult.StatusCode == StatusCode.OK)
+        {
+            var entityToUpdate = (RestaurantEntity)getResult.Content!;
+            entityToUpdate.Name = model.RestaurantName;
+            entityToUpdate.Location = model.Location;
+
+            var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate, x => x.Id == entityToUpdate.Id);
+
+            if (updateResult.StatusCode == StatusCode.OK)
+                return ResponseFactory.Ok(updateResult);
+
+            else if (updateResult.StatusCode == StatusCode.NOT_FOUND)
+                return ResponseFactory.NotFound(updateResult.Message!);
+        }
+
+        else if(getResult.StatusCode == StatusCode.NOT_FOUND)
+            return ResponseFactory.NotFound("Entity was not found.");
 
         return ResponseFactory.BadRequest();
     }

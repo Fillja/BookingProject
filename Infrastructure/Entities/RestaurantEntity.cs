@@ -9,5 +9,5 @@ public class RestaurantEntity
     public string Name { get; set; } = null!;
     public string Location { get; set; } = null!;
 
-    public virtual ICollection<TableEntity> Tables { get; set; } = new List<TableEntity>();
+    public virtual ICollection<TableEntity>? Tables { get; set; }
 }

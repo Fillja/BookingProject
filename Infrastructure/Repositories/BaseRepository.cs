@@ -34,7 +34,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             if (!entityList.Any()) 
                 return ResponseFactory.NotFound("List is empty.");
 
-            return ResponseFactory.Ok(entityList, "List was found");
+            return ResponseFactory.Ok(entityList, "List was found.");
 
         }
         catch (Exception ex) 
@@ -67,14 +67,14 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
 
             if(existsResult.StatusCode == StatusCode.EXISTS)
             {
-                _context.Set<TEntity>().Update(entity);
+                _context.Entry(entity).CurrentValues.SetValues(entity);
                 await _context.SaveChangesAsync();
 
                 return ResponseFactory.Ok(entity, "Successfully updated.");
             }
 
             else if(existsResult.StatusCode == StatusCode.NOT_FOUND)
-                return ResponseFactory.NotFound();
+                return ResponseFactory.NotFound("Entity not found.");
 
             return ResponseFactory.BadRequest();
         }
@@ -114,7 +114,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
                 return ResponseFactory.Ok("Successfully deleted.");
             }
             else if(result.StatusCode == StatusCode.NOT_FOUND)
-                return ResponseFactory.NotFound();
+                return ResponseFactory.NotFound("No entity found.");
             
             return ResponseFactory.BadRequest(); 
         }
