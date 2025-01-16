@@ -23,6 +23,25 @@ public class ResponseFactory
         };
     }
 
+    public static ResponseResult Created(string message = null!)
+    {
+        return new ResponseResult
+        {
+            Message = message ?? "Created.",
+            StatusCode = StatusCode.CREATED
+        };
+    }
+
+    public static ResponseResult Created(object obj, string message = null!)
+    {
+        return new ResponseResult
+        {
+            Content= obj,
+            Message = message ?? "Created.",
+            StatusCode = StatusCode.CREATED
+        };
+    }
+
     public static ResponseResult BadRequest(string message = null!)
     {
         return new ResponseResult

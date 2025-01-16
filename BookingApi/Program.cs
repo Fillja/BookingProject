@@ -17,6 +17,7 @@ builder.Services.AddScoped<TableChairRepository>();
 builder.Services.AddScoped<BookingRepository>();
 
 builder.Services.AddScoped<RestaurantService>();
+builder.Services.AddScoped<ChairService>();
 
 var app = builder.Build();
 app.UseSwagger();
