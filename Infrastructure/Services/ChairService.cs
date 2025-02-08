@@ -32,6 +32,8 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
 
             if (createResult.StatusCode == StatusCode.CREATED)
                 return ResponseFactory.Created(createResult);
+
+            return ResponseFactory.BadRequest(createResult.Message!);
         }
         else if (getResult.StatusCode == StatusCode.NOT_FOUND)
             return ResponseFactory.NotFound("Restaurant could not be found.");

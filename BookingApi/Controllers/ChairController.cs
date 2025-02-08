@@ -1,6 +1,4 @@
-﻿using Infrastructure.Entities;
-using Infrastructure.Factories;
-using Infrastructure.Models;
+﻿using Infrastructure.Models;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +18,14 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
         if (ModelState.IsValid) 
         {
             var createResult = await _chairService.CreateChairAsync(model);
+            
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
                 return Created($"api/chair/create/{createResult.Content}", createResult);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(createResult.Message);
+
+            return BadRequest(createResult.Message);
         }
 
         return BadRequest("Invalid fields.");
