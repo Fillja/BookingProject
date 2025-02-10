@@ -17,7 +17,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             _context.Set<TEntity>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return ResponseFactory.Created(entity, "Successfully created.");
+            return ResponseFactory.Ok(entity, "Successfully created.");
         }
         catch (Exception ex)
         {
@@ -58,14 +58,24 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
-    public virtual async Task<ResponseResult> UpdateAsync(TEntity entity)
+    public virtual async Task<ResponseResult> UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
     {
         try
         {
-            _context.Entry(entity).CurrentValues.SetValues(entity);
-            await _context.SaveChangesAsync();
+            var existsResult = await ExistsAsync(predicate);
 
-            return ResponseFactory.Ok(entity, "Successfully updated.");
+            if(existsResult.StatusCode == StatusCode.EXISTS)
+            {
+                _context.Entry(entity).CurrentValues.SetValues(entity);
+                await _context.SaveChangesAsync();
+
+                return ResponseFactory.Ok(entity, "Successfully updated.");
+            }
+
+            else if(existsResult.StatusCode == StatusCode.NOT_FOUND)
+                return ResponseFactory.NotFound("Entity not found.");
+
+            return ResponseFactory.BadRequest();
         }
         catch (Exception ex)
         {

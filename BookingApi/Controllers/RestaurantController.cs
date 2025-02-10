@@ -19,14 +19,14 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         {
             var createResult = await _restaurantService.CreateRestaurantAsync(model);
 
-            if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
-                return Created($"/api/restaurant/create/{createResult.Content}", createResult);
+            if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+                return Created($"/api/restaurant/{createResult.Content}", createResult.Content);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.EXISTS)
                 return Conflict(createResult.Message);
         }
 
-        return BadRequest("Invalid fields.");
+        return BadRequest();
     }
 
     [HttpGet("getall")]
@@ -40,7 +40,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         else if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(listResult.Message);
 
-        return BadRequest(listResult.Message);
+        return BadRequest();
     }
 
     [HttpGet("getone/{id}")]
@@ -54,7 +54,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         else if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(getResult.Message);
 
-        return BadRequest(getResult.Message);
+        return BadRequest();
     }
 
     [HttpPut("update/{id}")]
@@ -71,7 +71,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
                 return NotFound(updateResult.Message);
         }
 
-        return BadRequest("Invalid fields.");
+        return BadRequest();
     }
 
     [HttpDelete("delete/{id}")]
@@ -85,6 +85,6 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         else if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(deleteResult.Message);
 
-        return BadRequest(deleteResult.Message);
+        return BadRequest();
     }
 }

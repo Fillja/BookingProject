@@ -5,7 +5,7 @@ namespace Infrastructure.Models;
 public class TableModel
 {
     public string? Name { get; set; }
-    public string RestaurantName { get; set; } = null!;
+    public string? RestaurantName { get; set; }
 
     [Range (2, 16)]
     public int Size { get; set; }
