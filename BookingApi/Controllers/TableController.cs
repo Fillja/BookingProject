@@ -63,5 +63,27 @@ public class TableController(TableRepository tableRepository, TableService table
     public async Task<IActionResult> Update(string id, TableUpdateModel model)
     {
         var updateResult = await _tableService.UpdateTableAsync(id, model);
+
+        if(updateResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            return Ok(updateResult);
+
+        else if(updateResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            return NotFound(updateResult.Message);
+
+        return BadRequest(updateResult.Message);
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var deleteResult = await _tableRepository.DeleteAsync(x => x.Id == id);
+        
+        if(deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            return Ok(deleteResult.Message);
+
+        else if(deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            return NotFound(deleteResult.Message);
+
+        return BadRequest(deleteResult.Message);
     }
 }

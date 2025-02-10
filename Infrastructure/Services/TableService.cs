@@ -41,6 +41,25 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
 
     public async Task<ResponseResult> UpdateTableAsync(string id, TableUpdateModel model)
     {
-        return ResponseFactory.Ok();
+        var getResult = await _tableRepository.GetOneAsync(x => x.Id == id);
+
+        if (getResult.StatusCode == StatusCode.OK) 
+        {
+            var entityToUpdate = (TableEntity)getResult.Content!;
+            entityToUpdate.Name = model.Name;
+            entityToUpdate.Size = model.Size;
+            entityToUpdate.IsBooked = model.IsBooked;
+
+            var updateResult = await _tableRepository.UpdateAsync(entityToUpdate);
+
+            if(updateResult.StatusCode == StatusCode.OK)
+                return ResponseFactory.Ok(updateResult);
+
+            return ResponseFactory.BadRequest(updateResult.Message!);
+        }
+        else if(getResult.StatusCode == StatusCode.NOT_FOUND)
+            return ResponseFactory.NotFound(getResult.Message!);
+
+        return ResponseFactory.BadRequest(getResult.Message!);
     }
 }
