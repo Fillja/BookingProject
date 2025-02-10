@@ -1,6 +1,4 @@
-﻿using Infrastructure.Entities;
-using Infrastructure.Factories;
-using Infrastructure.Models;
+﻿using Infrastructure.Models;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +15,17 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     [HttpPost("create")]
     public async Task<IActionResult> Create(ChairModel model)
     {
-        if (ModelState.IsValid) 
+        if (ModelState.IsValid)
         {
             var createResult = await _chairService.CreateChairAsync(model);
+
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
                 return Created($"api/chair/create/{createResult.Content}", createResult);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(createResult.Message);
+
+            return BadRequest(createResult.Message);
         }
 
         return BadRequest("Invalid fields.");
@@ -34,10 +35,11 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     public async Task<IActionResult> GetAll()
     {
         var listResult = await _chairRepository.GetAllAsync();
-        if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+
+        if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
             return Ok(listResult);
 
-        else if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(listResult.Message);
 
         return BadRequest(listResult.Message);
@@ -47,10 +49,11 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     public async Task<IActionResult> GetOne(string id)
     {
         var getResult = await _chairRepository.GetOneAsync(x => x.Id == id);
-        if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+
+        if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
             return Ok(getResult);
-        
-        else if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+
+        else if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(getResult.Message);
 
         return BadRequest(getResult.Message);
@@ -59,16 +62,33 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(ChairUpdateModel model, string id)
     {
-        if (ModelState.IsValid) 
+        if (ModelState.IsValid)
         {
             var updateResult = await _chairService.UpdateChairAsync(model, id);
-            if(updateResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+
+            if (updateResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
                 return Ok(updateResult);
 
-            else if(updateResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            else if (updateResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(updateResult.Message);
+
+            return BadRequest(updateResult.Message);
         }
 
         return BadRequest("Invalid fields.");
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var deleteResult = await _chairRepository.DeleteAsync(x => x.Id == id);
+
+        if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            return Ok(deleteResult.Message);
+
+        else if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            return NotFound(deleteResult.Message);
+
+        return BadRequest(deleteResult.Message);
     }
 }

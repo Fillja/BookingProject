@@ -2,7 +2,6 @@
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories;
@@ -18,7 +17,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             _context.Set<TEntity>().Add(entity);
             await _context.SaveChangesAsync();
 
-            return ResponseFactory.Ok(entity, "Successfully created.");
+            return ResponseFactory.Created(entity, "Successfully created.");
         }
         catch (Exception ex)
         {
@@ -31,13 +30,13 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         try
         {
             IEnumerable<TEntity> entityList = await _context.Set<TEntity>().ToListAsync();
-            if (!entityList.Any()) 
+            if (!entityList.Any())
                 return ResponseFactory.NotFound("List is empty.");
 
             return ResponseFactory.Ok(entityList, "List was found.");
 
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             return ResponseFactory.BadRequest(ex.Message);
         }
@@ -59,24 +58,14 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
-    public virtual async Task<ResponseResult> UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
+    public virtual async Task<ResponseResult> UpdateAsync(TEntity entity)
     {
         try
         {
-            var existsResult = await ExistsAsync(predicate);
+            _context.Entry(entity).CurrentValues.SetValues(entity);
+            await _context.SaveChangesAsync();
 
-            if(existsResult.StatusCode == StatusCode.EXISTS)
-            {
-                _context.Entry(entity).CurrentValues.SetValues(entity);
-                await _context.SaveChangesAsync();
-
-                return ResponseFactory.Ok(entity, "Successfully updated.");
-            }
-
-            else if(existsResult.StatusCode == StatusCode.NOT_FOUND)
-                return ResponseFactory.NotFound("Entity not found.");
-
-            return ResponseFactory.BadRequest();
+            return ResponseFactory.Ok(entity, "Successfully updated.");
         }
         catch (Exception ex)
         {
@@ -104,7 +93,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         try
         {
             var result = await GetOneAsync(predicate);
-            if (result.StatusCode == StatusCode.OK) 
+            if (result.StatusCode == StatusCode.OK)
             {
                 var entity = (TEntity)result.Content!;
 
@@ -113,10 +102,10 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
 
                 return ResponseFactory.Ok("Successfully deleted.");
             }
-            else if(result.StatusCode == StatusCode.NOT_FOUND)
+            else if (result.StatusCode == StatusCode.NOT_FOUND)
                 return ResponseFactory.NotFound("No entity found.");
-            
-            return ResponseFactory.BadRequest(); 
+
+            return ResponseFactory.BadRequest(result.Message!);
         }
         catch (Exception ex)
         {
@@ -140,4 +129,3 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 }
-

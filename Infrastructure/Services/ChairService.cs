@@ -13,7 +13,7 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
 
     public async Task<ResponseResult> CreateChairAsync(ChairModel model)
     {
-        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == model.RestaurantName.ToLower());
+        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == model.RestaurantName!.ToLower());
 
         if (getResult.StatusCode == StatusCode.OK)
         {
@@ -32,6 +32,8 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
 
             if (createResult.StatusCode == StatusCode.CREATED)
                 return ResponseFactory.Created(createResult);
+
+            return ResponseFactory.BadRequest(createResult.Message!);
         }
         else if (getResult.StatusCode == StatusCode.NOT_FOUND)
             return ResponseFactory.NotFound("Restaurant could not be found.");
@@ -54,8 +56,11 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
             entityToUpdate.Gluten = model.Gluten;
 
             var updateResult = await _chairRepository.UpdateAsync(entityToUpdate);
+
             if (updateResult.StatusCode == StatusCode.OK)
                 return ResponseFactory.Ok(updateResult);
+
+            return ResponseFactory.BadRequest(updateResult.Message!);
         }
 
         else if (getResult.StatusCode == StatusCode.NOT_FOUND)

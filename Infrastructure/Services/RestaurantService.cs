@@ -24,10 +24,10 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
 
         var createResult = await _restaurantRepository.CreateAsync(restaurantEntity);
 
-        if (createResult.StatusCode == StatusCode.OK)
-            return ResponseFactory.Ok(createResult);
+        if (createResult.StatusCode == StatusCode.CREATED)
+            return ResponseFactory.Created(createResult);
 
-        return ResponseFactory.BadRequest();
+        return ResponseFactory.BadRequest(createResult.Message!);
     }
 
     public async Task<ResponseResult> UpdateRestaurantAsync(RestaurantModel model, string id)
@@ -36,22 +36,21 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
 
         if (getResult.StatusCode == StatusCode.OK)
         {
-            var entityToUpdate = (RestaurantEntity)getResult.Content!;
-            entityToUpdate.Name = model.RestaurantName;
+            var entityToUpdate = getResult.Content as RestaurantEntity;
+            entityToUpdate!.Name = model.RestaurantName;
             entityToUpdate.Location = model.Location;
 
-            var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate, x => x.Id == entityToUpdate.Id);
+            var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate);
 
             if (updateResult.StatusCode == StatusCode.OK)
                 return ResponseFactory.Ok(updateResult);
 
-            else if (updateResult.StatusCode == StatusCode.NOT_FOUND)
-                return ResponseFactory.NotFound(updateResult.Message!);
+            return ResponseFactory.BadRequest(updateResult.Message!);
         }
 
-        else if(getResult.StatusCode == StatusCode.NOT_FOUND)
-            return ResponseFactory.NotFound("Entity was not found.");
+        else if (getResult.StatusCode == StatusCode.NOT_FOUND)
+            return ResponseFactory.NotFound(getResult.Message!);
 
-        return ResponseFactory.BadRequest();
+        return ResponseFactory.BadRequest(getResult.Message!);
     }
 }
