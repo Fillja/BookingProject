@@ -25,6 +25,24 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
+    public virtual async Task<ResponseResult> CreateMultipleAsync(IEnumerable<TEntity> entityList)
+    {
+        try
+        {
+            foreach (var entity in entityList) 
+            {
+                _context.Set<TEntity>().Add(entity);
+            }
+            var result = await _context.SaveChangesAsync();
+
+            return ResponseFactory.Created(entityList, $"Successfully created {result} entities.");
+        }
+        catch (Exception ex)
+        {
+            return ResponseFactory.BadRequest(ex.Message);
+        }
+    }
+
     public virtual async Task<ResponseResult> GetAllAsync()
     {
         try

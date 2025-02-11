@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250211123435_Added Name To TableChairEntity")]
+    partial class AddedNameToTableChairEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TableChairId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.ChairEntity", b =>
@@ -93,7 +96,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Chairs", (string)null);
+                    b.ToTable("Chairs");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.RestaurantEntity", b =>
@@ -111,7 +114,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurants", (string)null);
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
@@ -136,7 +139,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TableId");
 
-                    b.ToTable("TablesChairs", (string)null);
+                    b.ToTable("TablesChairs");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableEntity", b =>
@@ -161,7 +164,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Tables", (string)null);
+                    b.ToTable("Tables");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.BookingEntity", b =>

@@ -1,0 +1,107 @@
+﻿{
+  "name": "Combined Table Test",
+  "table": {
+    "id": "7",
+    "name": "6-Mich",
+    "size": 6,
+    "isBooked": false,
+    "restaurantId": "Restaurant2",
+    "restaurant": {
+      "id": "Restaurant2",
+      "name": "Michaelangelo",
+      "location": "Karlskrona"
+    }
+  },
+  "chairs": [
+    {
+      "id": "21",
+      "name": "Mich-1",
+      "vegan": true,
+      "vegetarian": false,
+      "milk": false,
+      "eggs": false,
+      "gluten": false,
+      "restaurantId": "Restaurant2",
+      "restaurant": {
+        "id": "Restaurant2",
+        "name": "Michaelangelo",
+        "location": "Karlskrona"
+      }
+    },
+    {
+      "id": "22",
+      "name": "Mich-2",
+      "vegan": false,
+      "vegetarian": true,
+      "milk": false,
+      "eggs": false,
+      "gluten": false,
+      "restaurantId": "Restaurant2",
+      "restaurant": {
+        "id": "Restaurant2",
+        "name": "Michaelangelo",
+        "location": "Karlskrona"
+      }
+    },
+    {
+      "id": "23",
+      "name": "Mich-3",
+      "vegan": false,
+      "vegetarian": false,
+      "milk": true,
+      "eggs": false,
+      "gluten": false,
+      "restaurantId": "Restaurant2",
+      "restaurant": {
+        "id": "Restaurant2",
+        "name": "Michaelangelo",
+        "location": "Karlskrona"
+      }
+    },
+    {
+      "id": "24",
+      "name": "Mich-4",
+      "vegan": false,
+      "vegetarian": false,
+      "milk": false,
+      "eggs": true,
+      "gluten": false,
+      "restaurantId": "Restaurant2",
+      "restaurant": {
+        "id": "Restaurant2",
+        "name": "Michaelangelo",
+        "location": "Karlskrona"
+      }
+    },
+    {
+      "id": "25",
+      "name": "Mich-5",
+      "vegan": false,
+      "vegetarian": false,
+      "milk": false,
+      "eggs": false,
+      "gluten": true,
+      "restaurantId": "Restaurant2",
+      "restaurant": {
+        "id": "Restaurant2",
+        "name": "Michaelangelo",
+        "location": "Karlskrona"
+      }
+    },
+    {
+      "id": "26",
+      "name": "Mich-6",
+      "vegan": false,
+      "vegetarian": false,
+      "milk": false,
+      "eggs": false,
+      "gluten": false,
+      "restaurantId": "Restaurant2",
+      "restaurant": {
+        "id": "Restaurant2",
+        "name": "Michaelangelo",
+        "location": "Karlskrona"
+      }
+    }
+  ]
+}

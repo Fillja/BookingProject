@@ -20,7 +20,7 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
             var createResult = await _chairService.CreateChairAsync(model);
 
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
-                return Created($"api/chair/create/{createResult.Content}", createResult);
+                return Created($"/api/chair/create/{createResult.Content}", createResult);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(createResult.Message);

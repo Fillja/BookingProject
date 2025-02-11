@@ -18,6 +18,4 @@ public class ChairEntity
 
     [ForeignKey("RestaurantId")]
     public RestaurantEntity Restaurant { get; set; } = null!;
-
-    public virtual ICollection<TableChairEntity> TablesChairs { get; set; } = new List<TableChairEntity>();
 }

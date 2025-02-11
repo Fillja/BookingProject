@@ -9,6 +9,8 @@ public class TableChairEntity
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
+    public string? Name { get; set; }
+
     public string TableId { get; set; } = null!;
 
     [ForeignKey("TableId")]
@@ -18,6 +20,4 @@ public class TableChairEntity
 
     [ForeignKey("ChairId")]
     public ChairEntity Chair { get; set; } = null!;
-
-    public virtual ICollection<BookingEntity> Bookings { get; set; } = new List<BookingEntity>();
 }
