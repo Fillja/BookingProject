@@ -36,8 +36,8 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
 
         if (getResult.StatusCode == StatusCode.OK)
         {
-            var entityToUpdate = getResult.Content as RestaurantEntity;
-            entityToUpdate!.Name = model.RestaurantName;
+            var entityToUpdate = (RestaurantEntity)getResult.Content!;
+            entityToUpdate.Name = model.RestaurantName;
             entityToUpdate.Location = model.Location;
 
             var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate);
