@@ -1,8 +1,6 @@
-﻿using Infrastructure.Entities;
+﻿namespace Infrastructure.Models;
 
-namespace Infrastructure.Models;
-
-public class TableChairsModel
+public class SeatingModel
 {
     public string? Name { get; set; }
     public string TableId { get; set; } = null!;

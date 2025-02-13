@@ -14,7 +14,7 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configura
 builder.Services.AddScoped<RestaurantRepository>();
 builder.Services.AddScoped<TableRepository>();
 builder.Services.AddScoped<ChairRepository>();
-builder.Services.AddScoped<TableChairRepository>();
+builder.Services.AddScoped<SeatingRepository>();
 builder.Services.AddScoped<BookingRepository>();
 
 
@@ -22,7 +22,7 @@ builder.Services.AddScoped<BookingRepository>();
 builder.Services.AddScoped<RestaurantService>();
 builder.Services.AddScoped<ChairService>();
 builder.Services.AddScoped<TableService>();
-builder.Services.AddScoped<TableChairService>();
+builder.Services.AddScoped<SeatingService>();
 
 var app = builder.Build();
 app.UseSwagger();

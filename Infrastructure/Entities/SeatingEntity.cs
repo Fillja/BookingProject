@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Entities;
 
-public class TableChairEntity
+public class SeatingEntity
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();

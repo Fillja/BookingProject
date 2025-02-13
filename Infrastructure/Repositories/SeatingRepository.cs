@@ -3,7 +3,7 @@ using Infrastructure.Entities;
 
 namespace Infrastructure.Repositories;
 
-public class TableChairRepository(DataContext context) : BaseRepository<TableChairEntity>(context)
+public class SeatingRepository(DataContext context) : BaseRepository<SeatingEntity>(context)
 {
     private readonly DataContext _context = context;
 }

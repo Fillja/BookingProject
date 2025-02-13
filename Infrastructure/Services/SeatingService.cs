@@ -6,19 +6,20 @@ using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class TableChairService(TableChairRepository tableChairRepository, TableRepository tableRepository, ChairRepository chairRepository)
+public class SeatingService(SeatingRepository seatingRepository, TableRepository tableRepository, ChairRepository chairRepository)
 {
-    private readonly TableChairRepository _tableChairRepository = tableChairRepository;
+    private readonly SeatingRepository _seatingRepository = seatingRepository;
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly ChairRepository _chairRepository = chairRepository;
 
-    public async Task<ResponseResult> CreateCombinedTableAsync(TableChairsModel model)
+    public async Task<ResponseResult> CreateSeatingAsync(SeatingModel model)
     {
-        var listResult = await CreateTableChairListAsync(model);
+        var listResult = await CreateSeatingListAsync(model);
+
         if (listResult.StatusCode == StatusCode.CREATED) 
         {
-            var tableChairList = (IEnumerable<TableChairEntity>)listResult.Content!;
-            var createResult = await _tableChairRepository.CreateMultipleAsync(tableChairList);
+            var seatingList = (IEnumerable<SeatingEntity>)listResult.Content!;
+            var createResult = await _seatingRepository.CreateMultipleAsync(seatingList);
 
             if (createResult.StatusCode == StatusCode.CREATED)
                 return ResponseFactory.Created(createResult);
@@ -28,9 +29,9 @@ public class TableChairService(TableChairRepository tableChairRepository, TableR
         return ResponseFactory.NotFound(listResult.Message!);
     }
 
-    public async Task<ResponseResult> CreateTableChairListAsync(TableChairsModel model)
+    public async Task<ResponseResult> CreateSeatingListAsync(SeatingModel model)
     {
-        var tableChairList = new List<TableChairEntity>();
+        var seatingList = new List<SeatingEntity>();
         var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == model.TableId);
 
         if (getTableResult.StatusCode == StatusCode.OK)
@@ -45,7 +46,7 @@ public class TableChairService(TableChairRepository tableChairRepository, TableR
                 {
                     var chairEntity = (ChairEntity)getChairResult.Content!;
 
-                    var tableChairEntity = new TableChairEntity
+                    var seatingEntity = new SeatingEntity
                     {
                         Name = model.Name,
                         Table = tableEntity,
@@ -54,14 +55,14 @@ public class TableChairService(TableChairRepository tableChairRepository, TableR
                         ChairId = chairEntity.Id
                     };
 
-                    tableChairList.Add(tableChairEntity);
+                    seatingList.Add(seatingEntity);
                     
                    
                 }
                 else if(getChairResult.StatusCode  == StatusCode.NOT_FOUND)
                     return ResponseFactory.NotFound(getChairResult.Message!);
             }
-            return ResponseFactory.Created(tableChairList);
+            return ResponseFactory.Created(seatingList);
         }
         return ResponseFactory.NotFound(getTableResult.Message!);
     }

@@ -18,5 +18,5 @@ public class BookingEntity
     public string TableChairId { get; set; } = null!;
 
     [ForeignKey("TableChairId")]
-    public TableChairEntity TableChair { get; set; } = null!;
+    public SeatingEntity TableChair { get; set; } = null!;
 }
