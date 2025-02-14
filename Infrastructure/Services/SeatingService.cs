@@ -14,11 +14,11 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
     public async Task<ResponseResult> CreateSeatingAsync(SeatingModel model)
     {
-        var listResult = await CreateSeatingListAsync(model);
+        var seatingListResult = await CreateSeatingListAsync(model);
 
-        if (listResult.StatusCode == StatusCode.CREATED) 
+        if (seatingListResult.StatusCode == StatusCode.CREATED) 
         {
-            var seatingList = (IEnumerable<SeatingEntity>)listResult.Content!;
+            var seatingList = (IEnumerable<SeatingEntity>)seatingListResult.Content!;
             var createResult = await _seatingRepository.CreateMultipleAsync(seatingList);
 
             if (createResult.StatusCode == StatusCode.CREATED)
@@ -26,7 +26,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
             return ResponseFactory.BadRequest(createResult.Message!);
         }
-        return ResponseFactory.NotFound(listResult.Message!);
+        return ResponseFactory.NotFound(seatingListResult.Message!);
     }
 
     public async Task<ResponseResult> CreateSeatingListAsync(SeatingModel model)
@@ -70,18 +70,18 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
         if (tableResult.StatusCode == StatusCode.OK)
         {
-            var listResult = await _seatingRepository.GetAllWithIdAsync(tableId);
+            var seatingListResult = await _seatingRepository.GetAllWithIdAsync(tableId);
 
-            if (listResult.StatusCode == StatusCode.OK)
+            if (seatingListResult.StatusCode == StatusCode.OK)
             {
-                var cleanList = await CreateCleanListAsync((IEnumerable<SeatingEntity>)listResult.Content!, (TableEntity)tableResult.Content!);
+                var cleanList = await CreateCleanListAsync((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)tableResult.Content!);
                 return ResponseFactory.Ok(cleanList);
             }
 
-            else if(listResult.StatusCode == StatusCode.NOT_FOUND)
-                return ResponseFactory.NotFound(listResult.Message!);
+            else if(seatingListResult.StatusCode == StatusCode.NOT_FOUND)
+                return ResponseFactory.NotFound(seatingListResult.Message!);
 
-            return ResponseFactory.BadRequest(listResult.Message!);
+            return ResponseFactory.BadRequest(seatingListResult.Message!);
 
         }
         else if (tableResult.StatusCode == StatusCode.NOT_FOUND)
