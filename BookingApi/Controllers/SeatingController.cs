@@ -44,4 +44,18 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
 
         return BadRequest(listResult.Message!);
     }
+
+    [HttpGet("getone/{id}")]
+    public async Task<IActionResult> GetOne(string id)
+    {
+        var getResult = await _seatingService.GetOneSeatingAsync(id);
+
+        if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            return Ok(getResult);
+
+        else if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            return NotFound(getResult.Message!);
+
+        return BadRequest(getResult.Message!); 
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Contexts;
+using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;

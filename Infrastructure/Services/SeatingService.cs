@@ -36,8 +36,6 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
         if (getTableResult.StatusCode == StatusCode.OK)
         {
-            var tableEntity = (TableEntity)getTableResult.Content!;
-
             foreach (var chairId in model.ChairIds) 
             { 
                 var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == chairId);
@@ -49,15 +47,14 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
                     var seatingEntity = new SeatingEntity
                     {
                         Name = model.Name,
-                        Table = tableEntity,
+                        Table = (TableEntity)getTableResult.Content!,
                         TableId = model.TableId,
                         Chair = chairEntity,
                         ChairId = chairEntity.Id
                     };
 
                     seatingList.Add(seatingEntity);
-                    
-                   
+ 
                 }
                 else if(getChairResult.StatusCode  == StatusCode.NOT_FOUND)
                     return ResponseFactory.NotFound(getChairResult.Message!);
@@ -65,5 +62,47 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
             return ResponseFactory.Created(seatingList);
         }
         return ResponseFactory.NotFound(getTableResult.Message!);
+    }
+
+    public async Task<ResponseResult> GetOneSeatingAsync(string tableId)
+    {
+        var tableResult = await _tableRepository.GetOneAsync(x => x.Id == tableId);
+
+        if (tableResult.StatusCode == StatusCode.OK)
+        {
+            var listResult = await _seatingRepository.GetAllWithIdAsync(tableId);
+
+            if (listResult.StatusCode == StatusCode.OK)
+            {
+                var cleanList = await CreateCleanListAsync((IEnumerable<SeatingEntity>)listResult.Content!, (TableEntity)tableResult.Content!);
+                return ResponseFactory.Ok(cleanList);
+            }
+
+            else if(listResult.StatusCode == StatusCode.NOT_FOUND)
+                return ResponseFactory.NotFound(listResult.Message!);
+
+            return ResponseFactory.BadRequest(listResult.Message!);
+
+        }
+        else if (tableResult.StatusCode == StatusCode.NOT_FOUND)
+            return ResponseFactory.NotFound("Table could not be found.");
+
+        return ResponseFactory.BadRequest(tableResult.Message!);
+    }
+
+    public async Task<List<object>> CreateCleanListAsync(IEnumerable<SeatingEntity> seatingList, TableEntity tableEntity)
+    {
+        List<object> cleanList = [];
+        cleanList.Add(tableEntity);
+
+        foreach(var seatingEntity in seatingList)
+        {
+            var chairResult = await _chairRepository.GetOneAsync(x => x.Id == seatingEntity.ChairId);
+
+            if (chairResult.StatusCode == StatusCode.OK)
+                cleanList.Add((ChairEntity)chairResult.Content!);
+        }
+
+        return cleanList;
     }
 }
