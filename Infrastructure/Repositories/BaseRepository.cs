@@ -132,6 +132,24 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
+    public virtual async Task<ResponseResult> DeleteMultipleAsync(IEnumerable<TEntity> entityList)
+    {
+        try
+        {
+            foreach(var entity in entityList)
+            {
+                _context.Set<TEntity>().Remove(entity);
+            }
+            await _context.SaveChangesAsync();
+
+            return ResponseFactory.Ok("Successfully deleted.");
+        }
+        catch (Exception ex)
+        {
+            return ResponseFactory.BadRequest(ex.Message);
+        }
+    }
+
     public virtual async Task<ResponseResult> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
     {
         try

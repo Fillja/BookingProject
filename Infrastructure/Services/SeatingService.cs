@@ -70,12 +70,12 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
         if (tableResult.StatusCode == StatusCode.OK)
         {
-            var seatingListResult = await _seatingRepository.GetAllWithIdAsync(tableId);
+            var seatingListResult = await _seatingRepository.GetAllWithTableIdAsync(tableId);
 
             if (seatingListResult.StatusCode == StatusCode.OK)
             {
-                var cleanList = await CreateCleanListAsync((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)tableResult.Content!);
-                return ResponseFactory.Ok(cleanList);
+                var sortedSeatingList = await CreateSortedSeatingListAsync((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)tableResult.Content!);
+                return ResponseFactory.Ok(sortedSeatingList);
             }
 
             else if(seatingListResult.StatusCode == StatusCode.NOT_FOUND)
@@ -90,19 +90,19 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return ResponseFactory.BadRequest(tableResult.Message!);
     }
 
-    public async Task<List<object>> CreateCleanListAsync(IEnumerable<SeatingEntity> seatingList, TableEntity tableEntity)
+    public async Task<List<object>> CreateSortedSeatingListAsync(IEnumerable<SeatingEntity> seatingList, TableEntity tableEntity)
     {
-        List<object> cleanList = [];
-        cleanList.Add(tableEntity);
+        List<object> sortedSeatingList = [];
+        sortedSeatingList.Add(tableEntity);
 
         foreach(var seatingEntity in seatingList)
         {
             var chairResult = await _chairRepository.GetOneAsync(x => x.Id == seatingEntity.ChairId);
 
             if (chairResult.StatusCode == StatusCode.OK)
-                cleanList.Add((ChairEntity)chairResult.Content!);
+                sortedSeatingList.Add((ChairEntity)chairResult.Content!);
         }
 
-        return cleanList;
+        return sortedSeatingList;
     }
 }

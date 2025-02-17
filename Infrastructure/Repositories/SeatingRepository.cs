@@ -10,11 +10,11 @@ public class SeatingRepository(DataContext context) : BaseRepository<SeatingEnti
 {
     private readonly DataContext _context = context;
 
-    public virtual async Task<ResponseResult> GetAllWithIdAsync(string id)
+    public virtual async Task<ResponseResult> GetAllWithTableIdAsync(string tableId)
     {
         try
         {
-            IEnumerable<SeatingEntity> entityList = await _context.Seatings.Where(x => x.TableId == id).ToListAsync();
+            IEnumerable<SeatingEntity> entityList = await _context.Seatings.Where(x => x.TableId == tableId).ToListAsync();
             if (entityList.Any())
                 return ResponseFactory.Ok(entityList);
 

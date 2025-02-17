@@ -1,4 +1,5 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Entities;
+using Infrastructure.Models;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +47,9 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     }
 
     [HttpGet("getone/{id}")]
-    public async Task<IActionResult> GetOne(string id)
+    public async Task<IActionResult> GetOne(string tableId)
     {
-        var getResult = await _seatingService.GetOneSeatingAsync(id);
+        var getResult = await _seatingService.GetOneSeatingAsync(tableId);
 
         if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
             return Ok(getResult);
@@ -57,5 +58,22 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
             return NotFound(getResult.Message!);
 
         return BadRequest(getResult.Message!); 
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(string tableId)
+    {
+        var seatingListResult = await _seatingRepository.GetAllWithTableIdAsync(tableId);
+
+        if(seatingListResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        {
+            var seatingList = (IEnumerable<SeatingEntity>)seatingListResult.Content!;
+
+            var deleteResult = await _seatingRepository.DeleteMultipleAsync(seatingList);
+        }
+        else if(seatingListResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            return NotFound(seatingListResult.Message!);
+
+        return BadRequest(seatingListResult.Message!);
     }
 }
