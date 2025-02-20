@@ -14,7 +14,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     private readonly SeatingService _seatingService = seatingService;
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create(SeatingModel model)
+    public async Task<IActionResult> Create(CreateSeatingModel model)
     {
         if (ModelState.IsValid)
         {
@@ -35,7 +35,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     [HttpGet("getall")]
     public async Task<IActionResult> GetAll()
     {
-        var listResult = await _seatingRepository.GetAllAsync();
+        var listResult = await _seatingService.GetAllSeatingsAsync();
 
         if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
             return Ok(listResult);
@@ -46,7 +46,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         return BadRequest(listResult.Message!);
     }
 
-    [HttpGet("getone/{id}")]
+    [HttpGet("getone/{tableId}")]
     public async Task<IActionResult> GetOne(string tableId)
     {
         var getResult = await _seatingService.GetOneSeatingAsync(tableId);
@@ -60,7 +60,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         return BadRequest(getResult.Message!); 
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("delete/{tableId}")]
     public async Task<IActionResult> Delete(string tableId)
     {
         var seatingListResult = await _seatingRepository.GetAllWithTableIdAsync(tableId);
@@ -70,6 +70,12 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
             var seatingList = (IEnumerable<SeatingEntity>)seatingListResult.Content!;
 
             var deleteResult = await _seatingRepository.DeleteMultipleAsync(seatingList);
+
+            if(deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+                return Ok(deleteResult.Message);
+
+            return BadRequest(deleteResult.Message!);
+
         }
         else if(seatingListResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(seatingListResult.Message!);

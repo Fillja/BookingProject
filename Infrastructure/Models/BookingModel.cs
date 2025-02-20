@@ -21,5 +21,5 @@ public class BookingModel
 
     public string? SpecialRequests { get; set; }
 
-    public SeatingModel BookedTable { get; set; } = new SeatingModel();
+    public CreateSeatingModel BookedTable { get; set; } = new CreateSeatingModel();
 }

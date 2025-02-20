@@ -12,7 +12,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly ChairRepository _chairRepository = chairRepository;
 
-    public async Task<ResponseResult> CreateSeatingAsync(SeatingModel model)
+    public async Task<ResponseResult> CreateSeatingAsync(CreateSeatingModel model)
     {
         var seatingListResult = await CreateSeatingListAsync(model);
 
@@ -29,7 +29,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return ResponseFactory.NotFound(seatingListResult.Message!);
     }
 
-    public async Task<ResponseResult> CreateSeatingListAsync(SeatingModel model)
+    public async Task<ResponseResult> CreateSeatingListAsync(CreateSeatingModel model)
     {
         var seatingList = new List<SeatingEntity>();
         var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == model.TableId);
@@ -42,15 +42,13 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
                 if(getChairResult.StatusCode == StatusCode.OK)
                 {
-                    var chairEntity = (ChairEntity)getChairResult.Content!;
-
                     var seatingEntity = new SeatingEntity
                     {
                         Name = model.Name,
                         Table = (TableEntity)getTableResult.Content!,
                         TableId = model.TableId,
-                        Chair = chairEntity,
-                        ChairId = chairEntity.Id
+                        Chair = (ChairEntity)getChairResult.Content!,
+                        ChairId = chairId
                     };
 
                     seatingList.Add(seatingEntity);
@@ -64,6 +62,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return ResponseFactory.NotFound(getTableResult.Message!);
     }
 
+    //Instead of returning directly from repo with every instance of the table, we only return one instance of the table with its corresponding chairs
     public async Task<ResponseResult> GetOneSeatingAsync(string tableId)
     {
         var tableResult = await _tableRepository.GetOneAsync(x => x.Id == tableId);
@@ -74,8 +73,8 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
             if (seatingListResult.StatusCode == StatusCode.OK)
             {
-                var sortedSeatingList = await CreateSortedSeatingListAsync((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)tableResult.Content!);
-                return ResponseFactory.Ok(sortedSeatingList);
+                var seatingModel = CreateSeatingModel((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)tableResult.Content!);
+                return ResponseFactory.Ok(seatingModel);
             }
 
             else if(seatingListResult.StatusCode == StatusCode.NOT_FOUND)
@@ -90,19 +89,53 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return ResponseFactory.BadRequest(tableResult.Message!);
     }
 
-    public async Task<List<object>> CreateSortedSeatingListAsync(IEnumerable<SeatingEntity> seatingList, TableEntity tableEntity)
+    //Instead of returning directly from repo with every instance of the table, we only return one instance of the table with its corresponding chairs
+    public async Task<ResponseResult> GetAllSeatingsAsync()
     {
-        List<object> sortedSeatingList = [];
-        sortedSeatingList.Add(tableEntity);
+        var listResult = await _seatingRepository.GetAllAsync();
 
-        foreach(var seatingEntity in seatingList)
+        if (listResult.StatusCode == StatusCode.OK)
         {
-            var chairResult = await _chairRepository.GetOneAsync(x => x.Id == seatingEntity.ChairId);
+            var seatingModelList = CreateSeatingModelList((IEnumerable<SeatingEntity>)listResult.Content!);
+            return ResponseFactory.Ok(seatingModelList);
 
-            if (chairResult.StatusCode == StatusCode.OK)
-                sortedSeatingList.Add((ChairEntity)chairResult.Content!);
+        }
+        else if (listResult.StatusCode == StatusCode.NOT_FOUND)
+            return ResponseFactory.NotFound(listResult.Message!);
+
+        return ResponseFactory.BadRequest(listResult.Message!);
+    }
+
+    //Creates a single sorted seating model for the GetOneSeatingAsync() function
+    public static SeatingModel CreateSeatingModel(IEnumerable<SeatingEntity> seatingList, TableEntity tableEntity)
+    {
+        var seatingModel = new SeatingModel
+        {
+            Name = seatingList.First().Name,
+            Table = tableEntity,
+        };
+
+        foreach (var seatingEntity in seatingList)
+        {
+            seatingModel.Chairs.Add(seatingEntity.Chair);
         }
 
-        return sortedSeatingList;
+        return seatingModel;
+    }
+
+    //Creates a list of sorted seating models for the GetAllSeatingsAsync() function
+    public static List<SeatingModel> CreateSeatingModelList(IEnumerable<SeatingEntity> seatingList)
+    {
+        var seatingModelList = seatingList
+            .GroupBy(s => s.TableId)
+            .Select(group => new SeatingModel
+            {
+                Table = group.First().Table,
+                Name = group.First().Name,
+                Chairs = group.Select(s => s.Chair).ToList()
+            })
+            .ToList();
+
+        return seatingModelList;
     }
 }
