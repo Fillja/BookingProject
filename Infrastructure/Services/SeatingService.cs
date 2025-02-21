@@ -12,6 +12,32 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly ChairRepository _chairRepository = chairRepository;
 
+    public async Task<ResponseResult> CreateOneSeatingAsync(SeatingModel model, string chairId)
+    {
+        var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == chairId);
+
+        if (getChairResult.StatusCode == StatusCode.OK)
+        {
+            var seatingEntity = new SeatingEntity
+            {
+                Name = model.Name,
+                TableId = model.Table.Id,
+                ChairId = chairId,
+            };
+
+            var createResult = await _seatingRepository.CreateAsync(seatingEntity);
+
+            if (createResult.StatusCode == StatusCode.CREATED)
+                return ResponseFactory.Created(createResult.Message!);
+
+            return ResponseFactory.BadRequest(createResult.Message!);
+        }
+        else if(getChairResult.StatusCode == StatusCode.NOT_FOUND)
+            return ResponseFactory.NotFound(getChairResult.Message!);
+
+        return ResponseFactory.BadRequest(getChairResult.Message!);
+    }
+
     public async Task<ResponseResult> CreateSeatingAsync(CreateSeatingModel model)
     {
         var seatingListResult = await CreateSeatingListAsync(model);

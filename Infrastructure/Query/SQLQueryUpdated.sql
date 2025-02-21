@@ -52,34 +52,34 @@ INSERT INTO Chairs VALUES (37, 0, 0, 0, 0, 0, 'Restaurant3', 'Stol-7-Jensens')
 INSERT INTO Chairs VALUES (38, 0, 0, 0, 0, 0, 'Restaurant3', 'Stol-8-Jensens')
 
 -- Italli Bord #4, 8st stolar
-INSERT INTO TablesChairs VALUES ('Italli-8man-1', 4, 11)
-INSERT INTO TablesChairs VALUES ('Italli-8man-2', 4, 12)
-INSERT INTO TablesChairs VALUES ('Italli-8man-3', 4, 13)
-INSERT INTO TablesChairs VALUES ('Italli-8man-4', 4, 14)
-INSERT INTO TablesChairs VALUES ('Italli-8man-5', 4, 15)
-INSERT INTO TablesChairs VALUES ('Italli-8man-6', 4, 16)
-INSERT INTO TablesChairs VALUES ('Italli-8man-7', 4, 17)
-INSERT INTO TablesChairs VALUES ('Italli-8man-8', 4, 18)
+INSERT INTO Seatings VALUES ('Italli-8man-1', 4, 11)
+INSERT INTO Seatings VALUES ('Italli-8man-2', 4, 12)
+INSERT INTO Seatings VALUES ('Italli-8man-3', 4, 13)
+INSERT INTO Seatings VALUES ('Italli-8man-4', 4, 14)
+INSERT INTO Seatings VALUES ('Italli-8man-5', 4, 15)
+INSERT INTO Seatings VALUES ('Italli-8man-6', 4, 16)
+INSERT INTO Seatings VALUES ('Italli-8man-7', 4, 17)
+INSERT INTO Seatings VALUES ('Italli-8man-8', 4, 18)
 
 -- Michaelangelo Bord #8, 8st stolar
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-1', 8, 21)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-2', 8, 22)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-3', 8, 23)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-4', 8, 24)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-5', 8, 25)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-6', 8, 26)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-7', 8, 27)
-INSERT INTO TablesChairs VALUES ('Michaelangelo-8man-8', 8, 28)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-1', 8, 21)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-2', 8, 22)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-3', 8, 23)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-4', 8, 24)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-5', 8, 25)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-6', 8, 26)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-7', 8, 27)
+INSERT INTO Seatings VALUES ('Michaelangelo-8man-8', 8, 28)
 
 -- Jensens Bord #93, 8st stolar
-INSERT INTO TablesChairs VALUES ('Jensens-8man-1', 93, 31)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-2', 93, 32)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-3', 93, 33)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-4', 93, 34)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-5', 93, 35)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-6', 93, 36)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-7', 93, 37)
-INSERT INTO TablesChairs VALUES ('Jensens-8man-8', 93, 38)
+INSERT INTO Seatings VALUES ('Jensens-8man-1', 93, 31)
+INSERT INTO Seatings VALUES ('Jensens-8man-2', 93, 32)
+INSERT INTO Seatings VALUES ('Jensens-8man-3', 93, 33)
+INSERT INTO Seatings VALUES ('Jensens-8man-4', 93, 34)
+INSERT INTO Seatings VALUES ('Jensens-8man-5', 93, 35)
+INSERT INTO Seatings VALUES ('Jensens-8man-6', 93, 36)
+INSERT INTO Seatings VALUES ('Jensens-8man-7', 93, 37)
+INSERT INTO Seatings VALUES ('Jensens-8man-8', 93, 38)
 
 
 -- Bokar 8man på Italli
@@ -108,14 +108,14 @@ SELECT
 FROM 
     Bookings b
 JOIN 
-    TablesChairs tcBooked ON b.TableChairId = tcBooked.Id
+    Seatings sBooked ON b.SeatingId = sBooked.Id
 JOIN 
-    Tables t ON tcBooked.TableId = t.Id
+    Tables t ON sBooked.TableId = t.Id
 JOIN 
     Restaurants r ON t.RestaurantId = r.Id
 JOIN 
-    TablesChairs tc ON tc.TableId = t.Id
+    Seatings s ON s.TableId = t.Id
 JOIN 
-    Chairs c ON tc.ChairId = c.Id
+    Chairs c ON s.ChairId = c.Id
 WHERE 
     b.Id = 1;

@@ -17,5 +17,5 @@ public class ChairEntity
     public string RestaurantId { get; set; } = null!;
 
     [ForeignKey("RestaurantId")]
-    public RestaurantEntity Restaurant { get; set; } = null!;
+    public RestaurantEntity? Restaurant { get; set; }
 }

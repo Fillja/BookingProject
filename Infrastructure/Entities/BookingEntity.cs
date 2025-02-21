@@ -15,8 +15,8 @@ public class BookingEntity
     public string BookerPhone { get; set; } = null!;
     public string? SpecialRequests { get; set; }
 
-    public string TableChairId { get; set; } = null!;
+    public string SeatingId { get; set; } = null!;
 
-    [ForeignKey("TableChairId")]
-    public SeatingEntity TableChair { get; set; } = null!;
+    [ForeignKey("SeatingId")]
+    public SeatingEntity Seating { get; set; } = null!;
 }

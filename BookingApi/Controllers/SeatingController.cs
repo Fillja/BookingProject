@@ -82,4 +82,29 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
 
         return BadRequest(seatingListResult.Message!);
     }
+
+    [HttpPost("addchair/{chairId}")]
+    public async Task<IActionResult> AddChair(SeatingModel model, string chairId)
+    {
+        var createResult = await _seatingService.CreateOneSeatingAsync(model, chairId);
+
+        if(createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
+            return Ok(createResult.Message);
+
+        else if(createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            return NotFound(createResult.Message);
+
+        return BadRequest(createResult.Message);
+    }
+
+    [HttpDelete("removechair/{chairId}")]
+    public async Task<IActionResult> RemoveChair(SeatingModel model, string chairId)
+    {
+        var deleteResult = await _seatingRepository.DeleteAsync(s => s.ChairId == chairId);
+
+        if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            return Ok(deleteResult.Message);
+
+        return BadRequest(deleteResult.Message);
+    }
 }
