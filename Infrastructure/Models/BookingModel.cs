@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Infrastructure.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Models;
 
@@ -6,7 +7,6 @@ public class BookingModel
 {
     public DateTime BookingDate { get; set; } = DateTime.Now;
     public DateTime BookingStartTime { get; set; }
-    public DateTime BookingEndTime { get; set; }
 
     [Required]
     public string BookerName { get; set; } = null!;
@@ -21,5 +21,6 @@ public class BookingModel
 
     public string? SpecialRequests { get; set; }
 
-    public CreateSeatingModel BookedTable { get; set; } = new CreateSeatingModel();
+    public string SeatingId { get; set; } = null!;
+
 }
