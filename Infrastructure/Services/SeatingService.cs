@@ -38,7 +38,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return ResponseFactory.BadRequest(getChairResult.Message!);
     }
 
-    public async Task<ResponseResult> CreateSeatingAsync(CreateSeatingModel model)
+    public async Task<ResponseResult> CreateSeatingAsync(SeatingCreateModel model)
     {
         var seatingListResult = await CreateSeatingListAsync(model);
 
@@ -55,7 +55,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return ResponseFactory.NotFound(seatingListResult.Message!);
     }
 
-    public async Task<ResponseResult> CreateSeatingListAsync(CreateSeatingModel model)
+    public async Task<ResponseResult> CreateSeatingListAsync(SeatingCreateModel model)
     {
         var seatingList = new List<SeatingEntity>();
         var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == model.TableId);

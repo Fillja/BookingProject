@@ -2,6 +2,7 @@
 
 public class ChairUpdateModel
 {
+    public string ChairId { get; set; } = null!;
     public string? Name { get; set; }
     public bool Vegan { get; set; }
     public bool Vegetarian { get; set; }

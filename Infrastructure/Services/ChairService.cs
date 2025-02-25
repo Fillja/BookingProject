@@ -41,9 +41,9 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
         return ResponseFactory.BadRequest();
     }
 
-    public async Task<ResponseResult> UpdateChairAsync(ChairUpdateModel model, string id)
+    public async Task<ResponseResult> UpdateChairAsync(ChairUpdateModel model)
     {
-        var getResult = await _chairRepository.GetOneAsync(x => x.Id == id);
+        var getResult = await _chairRepository.GetOneAsync(x => x.Id == model.ChairId);
 
         if (getResult.StatusCode == StatusCode.OK)
         {

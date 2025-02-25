@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Models;
 
-public class CreateSeatingModel
+public class SeatingCreateModel
 {
     public string? Name { get; set; }
     public string TableId { get; set; } = null!;

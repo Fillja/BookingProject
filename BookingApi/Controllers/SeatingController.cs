@@ -14,7 +14,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     private readonly SeatingService _seatingService = seatingService;
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create(CreateSeatingModel model)
+    public async Task<IActionResult> Create(SeatingCreateModel model)
     {
         if (ModelState.IsValid)
         {

@@ -13,11 +13,9 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     private readonly BookingService _bookingService = bookingService;
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create(BookingModel model)
+    public async Task<IActionResult> Create(CompositeBookingAndSeatingModel compositeModel)
     {
-        if (ModelState.IsValid) 
-        {
-            var createResult = await _bookingService.CreateBookingAsync(model);
+            var createResult = await _bookingService.CreateBookingAsync(compositeModel.Booking, compositeModel.Seating);
 
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
                 return Created($"api/booking/create/{createResult.Content}", createResult);
@@ -26,9 +24,6 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
                 return NotFound(createResult.Message);
 
             return BadRequest(createResult.Message);
-        }
-
-        return BadRequest("Invalid fields.");
     }
 
     [HttpGet("getall")]

@@ -21,6 +21,4 @@ public class BookingModel
 
     public string? SpecialRequests { get; set; }
 
-    public string SeatingId { get; set; } = null!;
-
 }
