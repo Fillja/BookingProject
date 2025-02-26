@@ -19,12 +19,11 @@ public class BookingService(BookingRepository bookingRepository, SeatingReposito
         if(HttpErrorHandler.HasHttpError(getSeatingResult))
             return getSeatingResult;
 
-        var bookingEntity = PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingModel);
-
         var bookingResult = await BookTableAndChair(seatingBookingModel);
         if(HttpErrorHandler.HasHttpError(bookingResult))
             return bookingResult;
 
+        var bookingEntity = PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingModel);
         var createResult = await _bookingRepository.CreateAsync(bookingEntity);
         return createResult;
 

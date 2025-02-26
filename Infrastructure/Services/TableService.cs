@@ -11,55 +11,47 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
 
-    public async Task<ResponseResult> CreateTableAsync(TableModel model)
+    public async Task<ResponseResult> CreateTableAsync(TableModel tableModel)
     {
-        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == model.RestaurantName!.ToLower());
-        if (getResult.StatusCode == StatusCode.OK)
-        {
-            var restaurantEntity = (RestaurantEntity)getResult.Content!;
+        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == tableModel.RestaurantName!.ToLower());
+        if (HttpErrorHandler.HasHttpError(getResult))
+            return getResult;
 
-            var tableEntity = new TableEntity
-            {
-                Name = model.Name,
-                Size = model.Size,
-                IsBooked = model.IsBooked,
-                Restaurant = restaurantEntity,
-                RestaurantId = restaurantEntity.Id,
-            };
-            var createResult = await _tableRepository.CreateAsync(tableEntity);
-            if (createResult.StatusCode == StatusCode.CREATED)
-                return ResponseFactory.Created(createResult);
+        var tableEntity = PopulateTableEntity((RestaurantEntity)getResult.Content!, tableModel);
+        var createResult = await _tableRepository.CreateAsync(tableEntity);
+        return createResult;
 
-            return ResponseFactory.BadRequest(createResult.Message!);
-
-        }
-        else if (getResult.StatusCode == StatusCode.NOT_FOUND)
-            return ResponseFactory.NotFound("Restaurant could not be found.");
-
-        return ResponseFactory.BadRequest(getResult.Message!);
     }
 
-    public async Task<ResponseResult> UpdateTableAsync(string id, TableUpdateModel model)
+    public async Task<ResponseResult> UpdateTableAsync(string id, TableUpdateModel tableUpdateModel)
     {
         var getResult = await _tableRepository.GetOneAsync(x => x.Id == id);
+        if (HttpErrorHandler.HasHttpError(getResult))
+            return getResult;
 
-        if (getResult.StatusCode == StatusCode.OK) 
+        var entityToUpdate = PopulateTableEntity((TableEntity)getResult.Content!, tableUpdateModel);
+        var updateResult = await _tableRepository.UpdateAsync(entityToUpdate);
+        return updateResult;
+    }
+
+    public TableEntity PopulateTableEntity(RestaurantEntity restaurantEntity, TableModel tableModel)
+    {
+        return (new TableEntity
         {
-            var entityToUpdate = (TableEntity)getResult.Content!;
-            entityToUpdate.Name = model.Name;
-            entityToUpdate.Size = model.Size;
-            entityToUpdate.IsBooked = model.IsBooked;
+            Name = tableModel.Name,
+            Size = tableModel.Size,
+            IsBooked = tableModel.IsBooked,
+            Restaurant = restaurantEntity,
+            RestaurantId = restaurantEntity.Id,
+        });
+    }
 
-            var updateResult = await _tableRepository.UpdateAsync(entityToUpdate);
+    public TableEntity PopulateTableEntity(TableEntity tableEntity, TableUpdateModel tableUpdateModel)
+    {
+        tableEntity.Name = tableUpdateModel.Name;
+        tableEntity.Size = tableUpdateModel.Size;
+        tableEntity.IsBooked = tableUpdateModel.IsBooked;
 
-            if(updateResult.StatusCode == StatusCode.OK)
-                return ResponseFactory.Ok(updateResult);
-
-            return ResponseFactory.BadRequest(updateResult.Message!);
-        }
-        else if(getResult.StatusCode == StatusCode.NOT_FOUND)
-            return ResponseFactory.NotFound(getResult.Message!);
-
-        return ResponseFactory.BadRequest(getResult.Message!);
+        return tableEntity;
     }
 }

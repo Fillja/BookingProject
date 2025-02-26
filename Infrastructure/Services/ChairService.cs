@@ -11,61 +11,54 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
     private readonly ChairRepository _chairRepository = chairRepository;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
 
-    public async Task<ResponseResult> CreateChairAsync(ChairModel model)
+    public async Task<ResponseResult> CreateChairAsync(ChairModel chairModel)
     {
-        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == model.RestaurantName!.ToLower());
+        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == chairModel.RestaurantName!.ToLower());
+        if(HttpErrorHandler.HasHttpError(getResult))
+            return getResult;
 
-        if (getResult.StatusCode == StatusCode.OK)
-        {
-            var restaurantEntity = getResult.Content as RestaurantEntity;
-            var chairEntity = new ChairEntity
-            {
-                Name = model.Name,
-                Restaurant = restaurantEntity!,
-                Vegan = model.Vegan,
-                Vegetarian = model.Vegetarian,
-                Gluten = model.Gluten,
-                Milk = model.Milk,
-                Eggs = model.Egg,
-            };
-            var createResult = await _chairRepository.CreateAsync(chairEntity);
+        var chairEntity = PopulateChairEntity((RestaurantEntity)getResult.Content!, chairModel);
+        var createResult = await _chairRepository.CreateAsync(chairEntity);
+        return createResult;
 
-            if (createResult.StatusCode == StatusCode.CREATED)
-                return ResponseFactory.Created(createResult);
-
-            return ResponseFactory.BadRequest(createResult.Message!);
-        }
-        else if (getResult.StatusCode == StatusCode.NOT_FOUND)
-            return ResponseFactory.NotFound("Restaurant could not be found.");
-
-        return ResponseFactory.BadRequest();
     }
 
-    public async Task<ResponseResult> UpdateChairAsync(ChairUpdateModel model)
+    public async Task<ResponseResult> UpdateChairAsync(ChairUpdateModel chairUpdateModel)
     {
-        var getResult = await _chairRepository.GetOneAsync(x => x.Id == model.ChairId);
+        var getResult = await _chairRepository.GetOneAsync(x => x.Id == chairUpdateModel.ChairId);
+        if(HttpErrorHandler.HasHttpError(getResult))
+            return getResult;
 
-        if (getResult.StatusCode == StatusCode.OK)
+        var entityToUpdate = PopulateChairEntity((ChairEntity)getResult.Content!, chairUpdateModel);
+        var updateResult = await _chairRepository.UpdateAsync(entityToUpdate);
+        return updateResult;
+
+    }
+
+    public ChairEntity PopulateChairEntity(RestaurantEntity restaurantEntity, ChairModel chairModel)
+    {
+        return (new ChairEntity
         {
-            var entityToUpdate = getResult.Content as ChairEntity;
-            entityToUpdate!.Name = model.Name;
-            entityToUpdate.Vegan = model.Vegan;
-            entityToUpdate.Vegetarian = model.Vegetarian;
-            entityToUpdate.Eggs = model.Egg;
-            entityToUpdate.Milk = model.Milk;
-            entityToUpdate.Gluten = model.Gluten;
+            Name = chairModel.Name,
+            Restaurant = restaurantEntity,
+            RestaurantId = restaurantEntity.Id,
+            Vegan = chairModel.Vegan,
+            Vegetarian = chairModel.Vegetarian,
+            Gluten = chairModel.Gluten,
+            Milk = chairModel.Milk,
+            Eggs = chairModel.Egg,
+        });
+    }
 
-            var updateResult = await _chairRepository.UpdateAsync(entityToUpdate);
+    public ChairEntity PopulateChairEntity(ChairEntity chairEntity, ChairUpdateModel chairUpdateModel)
+    {
+        chairEntity.Name = chairUpdateModel.Name;
+        chairEntity.Vegan = chairUpdateModel.Vegan;
+        chairEntity.Vegetarian = chairUpdateModel.Vegetarian;
+        chairEntity.Gluten = chairUpdateModel.Gluten;
+        chairEntity.Milk = chairUpdateModel.Milk;
+        chairEntity.Eggs = chairUpdateModel.Egg;
 
-            if (updateResult.StatusCode == StatusCode.OK)
-                return ResponseFactory.Ok(updateResult);
-
-            return ResponseFactory.BadRequest(updateResult.Message!);
-        }
-
-        else if (getResult.StatusCode == StatusCode.NOT_FOUND)
-            return ResponseFactory.NotFound(getResult.Message!);
-
-        return ResponseFactory.BadRequest();
+        return chairEntity;
     }
 }

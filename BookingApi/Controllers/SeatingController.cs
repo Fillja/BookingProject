@@ -86,7 +86,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     [HttpPost("addchair/{chairId}")]
     public async Task<IActionResult> AddChair(SeatingModel model, string chairId)
     {
-        var createResult = await _seatingService.CreateOneSeatingAsync(model, chairId);
+        var createResult = await _seatingService.CreateSeatingEntityAsync(model, chairId);
 
         if(createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
             return Ok(createResult.Message);

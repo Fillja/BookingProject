@@ -32,7 +32,7 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
         var listResult = await _bookingRepository.GetAllAsync();
 
         if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(listResult);
+            return Ok(listResult.Content);
 
         else if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(listResult.Message);
@@ -46,7 +46,7 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
         var getBookingResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
 
         if(getBookingResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(getBookingResult);
+            return Ok(getBookingResult.Content);
 
         else if(getBookingResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(getBookingResult.Message);

@@ -23,34 +23,20 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
         };
 
         var createResult = await _restaurantRepository.CreateAsync(restaurantEntity);
-
-        if (createResult.StatusCode == StatusCode.CREATED)
-            return ResponseFactory.Created(createResult);
-
-        return ResponseFactory.BadRequest(createResult.Message!);
+        return createResult;
     }
 
     public async Task<ResponseResult> UpdateRestaurantAsync(RestaurantModel model, string id)
     {
         var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
+        if (HttpErrorHandler.HasHttpError(getResult))
+            return getResult;
 
-        if (getResult.StatusCode == StatusCode.OK)
-        {
-            var entityToUpdate = (RestaurantEntity)getResult.Content!;
-            entityToUpdate.Name = model.RestaurantName;
-            entityToUpdate.Location = model.Location;
+        var entityToUpdate = (RestaurantEntity)getResult.Content!;
+        entityToUpdate.Name = model.RestaurantName;
+        entityToUpdate.Location = model.Location;
 
-            var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate);
-
-            if (updateResult.StatusCode == StatusCode.OK)
-                return ResponseFactory.Ok(updateResult);
-
-            return ResponseFactory.BadRequest(updateResult.Message!);
-        }
-
-        else if (getResult.StatusCode == StatusCode.NOT_FOUND)
-            return ResponseFactory.NotFound(getResult.Message!);
-
-        return ResponseFactory.BadRequest(getResult.Message!);
+        var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate);
+        return updateResult;
     }
 }
