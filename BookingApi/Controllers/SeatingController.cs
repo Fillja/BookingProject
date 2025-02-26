@@ -21,7 +21,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
             var createResult = await _seatingService.CreateSeatingAsync(model);
 
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
-                return Created($"/api/seating/create/{createResult.Content}", createResult);
+                return Created($"/api/seating/create/{createResult.Content}", createResult.Content);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(createResult.Message!);
@@ -38,7 +38,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         var listResult = await _seatingService.GetAllSeatingsAsync();
 
         if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(listResult);
+            return Ok(listResult.Content);
 
         else if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(listResult.Message!);
@@ -52,7 +52,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         var getResult = await _seatingService.GetOneSeatingAsync(tableId);
 
         if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(getResult);
+            return Ok(getResult.Content);
 
         else if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(getResult.Message!);

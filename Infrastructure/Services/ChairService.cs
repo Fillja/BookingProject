@@ -14,8 +14,9 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
     public async Task<ResponseResult> CreateChairAsync(ChairModel chairModel)
     {
         var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == chairModel.RestaurantName!.ToLower());
-        if(HttpErrorHandler.HasHttpError(getResult))
+        if (HttpErrorHandler.HasHttpError(getResult))
             return getResult;
+
 
         var chairEntity = PopulateChairEntity((RestaurantEntity)getResult.Content!, chairModel);
         var createResult = await _chairRepository.CreateAsync(chairEntity);

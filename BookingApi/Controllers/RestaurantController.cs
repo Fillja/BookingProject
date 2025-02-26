@@ -20,7 +20,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
             var createResult = await _restaurantService.CreateRestaurantAsync(model);
 
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
-                return Created($"/api/restaurant/create/{createResult.Content}", createResult);
+                return Created($"/api/restaurant/create/{createResult.Content}", createResult.Content);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.EXISTS)
                 return Conflict(createResult.Message);
@@ -37,7 +37,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         var listResult = await _restaurantRepository.GetAllAsync();
 
         if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(listResult);
+            return Ok(listResult.Content);
 
         else if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(listResult.Message);
@@ -51,7 +51,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
 
         if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(getResult);
+            return Ok(getResult.Content);
 
         else if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(getResult.Message);
@@ -67,7 +67,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
             var updateResult = await _restaurantService.UpdateRestaurantAsync(model, id);
 
             if (updateResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-                return Ok(updateResult);
+                return Ok(updateResult.Content);
 
             else if (updateResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(updateResult.Message);

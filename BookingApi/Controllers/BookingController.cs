@@ -18,7 +18,7 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
             var createResult = await _bookingService.CreateBookingAsync(compositeModel.Booking, compositeModel.Seating);
 
             if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
-                return Created($"api/booking/create/{createResult.Content}", createResult);
+                return Created($"api/booking/create/{createResult.Content}", createResult.Content);
 
             else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
                 return NotFound(createResult.Message);

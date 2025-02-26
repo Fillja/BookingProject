@@ -37,7 +37,7 @@ public class TableController(TableRepository tableRepository, TableService table
         var listResult = await _tableRepository.GetAllAsync();
 
         if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(listResult);
+            return Ok(listResult.Content);
 
         else if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(listResult.Message);
@@ -51,7 +51,7 @@ public class TableController(TableRepository tableRepository, TableService table
         var getResult = await _tableRepository.GetOneAsync(x => x.Id == id);
 
         if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(getResult);
+            return Ok(getResult.Content);
 
         else if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(getResult.Message);
@@ -65,7 +65,7 @@ public class TableController(TableRepository tableRepository, TableService table
         var updateResult = await _tableService.UpdateTableAsync(id, model);
 
         if(updateResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
-            return Ok(updateResult);
+            return Ok(updateResult.Content);
 
         else if(updateResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
             return NotFound(updateResult.Message);
