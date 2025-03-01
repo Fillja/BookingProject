@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250211123435_Added Name To TableChairEntity")]
-    partial class AddedNameToTableChairEntity
+    [Migration("20250301125628_InitNewDB")]
+    partial class InitNewDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,16 +51,16 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("SpecialRequests")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TableChairId")
+                    b.Property<string>("SeatingId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("SpecialRequests")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("TableChairId");
+                    b.HasIndex("SeatingId");
 
                     b.ToTable("Bookings");
                 });
@@ -117,7 +117,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Restaurants");
                 });
 
-            modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
+            modelBuilder.Entity("Infrastructure.Entities.SeatingEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -139,7 +139,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TableId");
 
-                    b.ToTable("TablesChairs");
+                    b.ToTable("Seatings");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TableEntity", b =>
@@ -169,13 +169,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Entities.BookingEntity", b =>
                 {
-                    b.HasOne("Infrastructure.Entities.TableChairEntity", "TableChair")
-                        .WithMany("Bookings")
-                        .HasForeignKey("TableChairId")
+                    b.HasOne("Infrastructure.Entities.SeatingEntity", "Seating")
+                        .WithMany()
+                        .HasForeignKey("SeatingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TableChair");
+                    b.Navigation("Seating");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.ChairEntity", b =>
@@ -189,16 +189,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
+            modelBuilder.Entity("Infrastructure.Entities.SeatingEntity", b =>
                 {
                     b.HasOne("Infrastructure.Entities.ChairEntity", "Chair")
-                        .WithMany("TablesChairs")
+                        .WithMany()
                         .HasForeignKey("ChairId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Infrastructure.Entities.TableEntity", "Table")
-                        .WithMany("TablesChairs")
+                        .WithMany()
                         .HasForeignKey("TableId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -217,21 +217,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("Infrastructure.Entities.ChairEntity", b =>
-                {
-                    b.Navigation("TablesChairs");
-                });
-
-            modelBuilder.Entity("Infrastructure.Entities.TableChairEntity", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Infrastructure.Entities.TableEntity", b =>
-                {
-                    b.Navigation("TablesChairs");
                 });
 #pragma warning restore 612, 618
         }

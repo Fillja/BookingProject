@@ -37,7 +37,7 @@ public class BookingRepository(DataContext context) : BaseRepository<BookingEnti
         {
             var bookingEntity = await _context.Bookings
                 .Include(b => b.Seating)
-                .FirstOrDefaultAsync(predicate);
+                .FirstAsync(predicate);
 
             if (bookingEntity == null)
                 return ResponseFactory.NotFound("Entity could not be found.");

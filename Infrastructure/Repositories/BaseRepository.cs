@@ -15,7 +15,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
     {
         try
         {
-            _context.Set<TEntity>().Add(entity);
+            _context.Add(entity);
             await _context.SaveChangesAsync();
 
             return ResponseFactory.Created(entity, "Successfully created.");
@@ -32,7 +32,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         {
             foreach (var entity in entityList) 
             {
-                _context.Set<TEntity>().Add(entity);
+                _context.Add(entity);
             }
             var result = await _context.SaveChangesAsync();
 
@@ -96,7 +96,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
     {
         try
         {
-            _context.Set<TEntity>().Remove(entity);
+            _context.Remove(entity);
             await _context.SaveChangesAsync();
 
             return ResponseFactory.Ok("Successfully deleted.");
