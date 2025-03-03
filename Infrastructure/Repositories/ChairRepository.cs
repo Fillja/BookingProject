@@ -19,14 +19,14 @@ public class ChairRepository(DataContext context) : BaseRepository<ChairEntity>(
                 .ToListAsync();
 
             if (!chairList.Any())
-                return ResponseFactory.NotFound("List is empty.");
+                return ResponseResult.Result(2, "List is empty.");
 
-            return ResponseFactory.Ok(chairList, "List was found.");
+            return ResponseResult.Result(0, "List was found.", chairList);
 
         }
         catch(Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 }

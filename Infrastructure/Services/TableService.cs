@@ -14,7 +14,7 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
     public async Task<ResponseResult> CreateTableAsync(TableModel tableModel)
     {
         var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == tableModel.RestaurantName!.ToLower());
-        if (HttpErrorHandler.HasHttpError(getResult))
+        if (getResult.HasFailed)
             return getResult;
 
         var tableEntity = PopulateTableEntity((RestaurantEntity)getResult.Content!, tableModel);
@@ -26,7 +26,7 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
     public async Task<ResponseResult> UpdateTableAsync(string id, TableUpdateModel tableUpdateModel)
     {
         var getResult = await _tableRepository.GetOneAsync(x => x.Id == id);
-        if (HttpErrorHandler.HasHttpError(getResult))
+        if (getResult.HasFailed)
             return getResult;
 
         var entityToUpdate = PopulateTableEntity((TableEntity)getResult.Content!, tableUpdateModel);

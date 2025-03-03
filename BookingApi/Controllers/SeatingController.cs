@@ -20,10 +20,10 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         {
             var createResult = await _seatingService.CreateSeatingAsync(model);
 
-            if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
+            if (createResult.StatusCode.Equals(0))
                 return Created($"/api/seating/create/{createResult.Content}", createResult.Content);
 
-            else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            else if (createResult.StatusCode.Equals(2))
                 return NotFound(createResult.Message!);
 
             return BadRequest(createResult.Message!);
@@ -37,10 +37,10 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     {
         var listResult = await _seatingService.GetAllSeatingsAsync();
 
-        if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if(listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);
 
-        else if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(listResult.StatusCode.Equals(2))
             return NotFound(listResult.Message!);
 
         return BadRequest(listResult.Message!);
@@ -51,10 +51,10 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     {
         var getResult = await _seatingService.GetOneSeatingAsync(tableId);
 
-        if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if(getResult.StatusCode.Equals(0))
             return Ok(getResult.Content);
 
-        else if(getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(getResult.StatusCode.Equals(2))
             return NotFound(getResult.Message!);
 
         return BadRequest(getResult.Message!); 
@@ -65,19 +65,19 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     {
         var seatingListResult = await _seatingRepository.GetAllWithTableIdAsync(tableId);
 
-        if(seatingListResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if(seatingListResult.StatusCode.Equals(0))
         {
             var seatingList = (IEnumerable<SeatingEntity>)seatingListResult.Content!;
 
             var deleteResult = await _seatingRepository.DeleteMultipleAsync(seatingList);
 
-            if(deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            if(deleteResult.StatusCode.Equals(0))
                 return Ok(deleteResult.Message);
 
             return BadRequest(deleteResult.Message!);
 
         }
-        else if(seatingListResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(seatingListResult.StatusCode.Equals(2))
             return NotFound(seatingListResult.Message!);
 
         return BadRequest(seatingListResult.Message!);
@@ -88,10 +88,10 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     {
         var createResult = await _seatingService.CreateSeatingEntityAsync(model, chairId);
 
-        if(createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
+        if(createResult.StatusCode.Equals(0))
             return Ok(createResult.Message);
 
-        else if(createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(createResult.StatusCode.Equals(2))
             return NotFound(createResult.Message);
 
         return BadRequest(createResult.Message);
@@ -102,7 +102,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     {
         var deleteResult = await _seatingRepository.DeleteAsync(s => s.ChairId == chairId);
 
-        if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if (deleteResult.StatusCode.Equals(0))
             return Ok(deleteResult.Message);
 
         return BadRequest(deleteResult.Message);

@@ -20,14 +20,14 @@ public class BookingRepository(DataContext context) : BaseRepository<BookingEnti
                 .ToListAsync();
 
             if (!bookingList.Any())
-                return ResponseFactory.NotFound("List is empty.");
+                return ResponseResult.Result(2, "List is empty.");
 
-            return ResponseFactory.Ok(bookingList, "List was found.");
+            return ResponseResult.Result(0, "List was found.", bookingList);
 
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -40,13 +40,13 @@ public class BookingRepository(DataContext context) : BaseRepository<BookingEnti
                 .FirstAsync(predicate);
 
             if (bookingEntity == null)
-                return ResponseFactory.NotFound("Entity could not be found.");
+                return ResponseResult.Result(2, "Entity could not be found.");
 
-            return ResponseFactory.Ok(bookingEntity, "Entity found.");
+            return ResponseResult.Result(0, "Entity found.", bookingEntity);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 }

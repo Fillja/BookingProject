@@ -17,10 +17,10 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     {
             var createResult = await _bookingService.CreateBookingAsync(compositeModel.Booking, compositeModel.Seating);
 
-            if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
+            if (createResult.StatusCode.Equals(0))
                 return Created($"api/booking/create/{createResult.Content}", createResult.Content);
 
-            else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            else if (createResult.StatusCode.Equals(2))
                 return NotFound(createResult.Message);
 
             return BadRequest(createResult.Message);
@@ -31,10 +31,10 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     {
         var listResult = await _bookingRepository.GetAllAsync();
 
-        if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if(listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);
 
-        else if(listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(listResult.StatusCode.Equals(2))
             return NotFound(listResult.Message);
 
         return BadRequest(listResult.Message);
@@ -45,10 +45,10 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     {
         var getBookingResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
 
-        if(getBookingResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if(getBookingResult.StatusCode.Equals(0))
             return Ok(getBookingResult.Content);
 
-        else if(getBookingResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(getBookingResult.StatusCode.Equals(2))
             return NotFound(getBookingResult.Message);
 
         return BadRequest(getBookingResult.Message);
@@ -65,10 +65,10 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     {
         var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == id);
 
-        if(deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if(deleteResult.StatusCode.Equals(0))
             return Ok(deleteResult.Message);
 
-        else if(deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if(deleteResult.StatusCode.Equals(2))
             return NotFound(deleteResult.Message);
 
         return BadRequest(deleteResult.Message);

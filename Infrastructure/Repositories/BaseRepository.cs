@@ -1,6 +1,4 @@
 ﻿using Infrastructure.Contexts;
-using Infrastructure.Entities;
-using Infrastructure.Factories;
 using Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -11,6 +9,13 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
 {
     private readonly DataContext _context = context;
 
+    /*
+        OK = 0,
+        FAILED = 1,
+        NOT_FOUND = 2,
+        CONFLICT = 3
+     */
+
     public virtual async Task<ResponseResult> CreateAsync(TEntity entity)
     {
         try
@@ -18,11 +23,11 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             _context.Add(entity);
             await _context.SaveChangesAsync();
 
-            return ResponseFactory.Created(entity, "Successfully created.");
+            return ResponseResult.Result(0, "Successfully created.", entity);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -36,11 +41,11 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             }
             var result = await _context.SaveChangesAsync();
 
-            return ResponseFactory.Created(entityList, $"Successfully created {result} entities.");
+            return ResponseResult.Result(0, $"Successfully created {result} entities.", entityList);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -50,14 +55,14 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         {
             IEnumerable<TEntity> entityList = await _context.Set<TEntity>().ToListAsync();
             if (!entityList.Any())
-                return ResponseFactory.NotFound("List is empty.");
+                return ResponseResult.Result(2, "List is empty");
 
-            return ResponseFactory.Ok(entityList, "List was found.");
+            return ResponseResult.Result(0, "List was found.", entityList);
 
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -67,13 +72,13 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         {
             var entity = await _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
             if (entity == null)
-                return ResponseFactory.NotFound("Entity could not be found.");
+                return ResponseResult.Result(2, "Entity could not be found.");
 
-            return ResponseFactory.Ok(entity, "Entity found.");
+            return ResponseResult.Result(0, "Entity found.", entity);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -84,11 +89,11 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             _context.Entry(entity).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync();
 
-            return ResponseFactory.Ok(entity, "Successfully updated.");
+            return ResponseResult.Result(0, "Successfully updated.", entity);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -99,11 +104,11 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             _context.Remove(entity);
             await _context.SaveChangesAsync();
 
-            return ResponseFactory.Ok("Successfully deleted.");
+            return ResponseResult.Result(0, "Successfully deleted.");
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -112,23 +117,21 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         try
         {
             var result = await GetOneAsync(predicate);
-            if (result.StatusCode == StatusCode.OK)
-            {
-                var entity = (TEntity)result.Content!;
+            if (result.HasFailed)
+                return result;
 
-                _context.Set<TEntity>().Remove(entity);
-                await _context.SaveChangesAsync();
+    
+            var entity = (TEntity)result.Content!;
 
-                return ResponseFactory.Ok("Successfully deleted.");
-            }
-            else if (result.StatusCode == StatusCode.NOT_FOUND)
-                return ResponseFactory.NotFound("No entity found.");
+            _context.Set<TEntity>().Remove(entity);
+            await _context.SaveChangesAsync();
 
-            return ResponseFactory.BadRequest(result.Message!);
+            return ResponseResult.Result(0, "Successfully deleted.");
+
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -142,11 +145,11 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
             }
             await _context.SaveChangesAsync();
 
-            return ResponseFactory.Ok("Successfully deleted.");
+            return ResponseResult.Result(0, "Successfully deleted.");
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -156,13 +159,13 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         {
             var existResult = await _context.Set<TEntity>().AnyAsync(predicate);
             if (existResult)
-                return ResponseFactory.Exists();
+                return ResponseResult.Result(3, "Entity already exists.");
 
-            return ResponseFactory.NotFound();
+            return ResponseResult.Result(0);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 }

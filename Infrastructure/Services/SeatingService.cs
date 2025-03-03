@@ -18,13 +18,13 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         var seatingList = new List<SeatingEntity>();
 
         var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == model.TableId);
-        if (HttpErrorHandler.HasHttpError(getTableResult))
+        if (getTableResult.HasFailed)
             return getTableResult;
 
         foreach (var chairId in model.ChairIds)
         {
             var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == chairId);
-            if (HttpErrorHandler.HasHttpError(getChairResult))
+            if (getTableResult.HasFailed)
                 return getChairResult;
 
             var seatingEntity = new SeatingEntity
@@ -48,7 +48,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     {
         var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == chairId);
 
-        if (HttpErrorHandler.HasHttpError(getChairResult))
+        if (getChairResult.HasFailed)
             return getChairResult;
 
         var seatingEntity = new SeatingEntity
@@ -66,16 +66,16 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     //Instead of returning directly from repo with every instance of the table, we only return one instance of the table with its corresponding chairs
     public async Task<ResponseResult> GetOneSeatingAsync(string tableId)
     {
-        var tableResult = await _tableRepository.GetOneAsync(x => x.Id == tableId);
-        if(HttpErrorHandler.HasHttpError(tableResult))
-            return tableResult;
+        var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == tableId);
+        if(getTableResult.HasFailed)
+            return getTableResult;
 
         var seatingListResult = await _seatingRepository.GetAllWithTableIdAsync(tableId);
-        if(HttpErrorHandler.HasHttpError(seatingListResult))
+        if(seatingListResult.HasFailed)
             return seatingListResult;
 
-        var seatingModel = CreateSeatingModel((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)tableResult.Content!);
-        return ResponseFactory.Ok(seatingModel);
+        var seatingModel = CreateSeatingModel((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)getTableResult.Content!);
+        return ResponseResult.Result(0, "", seatingModel);
     }
 
     //Creates a single sorted seating model for the GetOneSeatingAsync() function
@@ -101,12 +101,12 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     public async Task<ResponseResult> GetAllSeatingsAsync()
     {
         var listResult = await _seatingRepository.GetAllAsync();
-        if(HttpErrorHandler.HasHttpError(listResult))
+        if(listResult.HasFailed)
             return listResult;
 
 
         var seatingModelList = CreateSeatingModelList((IEnumerable<SeatingEntity>)listResult.Content!);
-        return ResponseFactory.Ok(seatingModelList);
+        return ResponseResult.Result(0, "", seatingModelList);
     }
 
     //Creates a list of sorted seating models for the GetAllSeatingsAsync() function

@@ -1,71 +1,81 @@
-﻿using Infrastructure.Helpers;
+﻿//using Infrastructure.Helpers;
 
-namespace Infrastructure.Factories;
+//namespace Infrastructure.Factories;
 
-public class ResponseFactory
-{
-    public static ResponseResult Ok(string message = null!)
-    {
-        return new ResponseResult
-        {
-            Message = message ?? "Succeeded.",
-            StatusCode = StatusCode.OK
-        };
-    }
+//public class ResponseFactory
+//{
+//    public static ResponseResult Result(int statusCode, object obj = null!, string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Content = obj ?? "",
+//            Message = message ?? "Succeeded.",
+//            StatusCode = statusCode
+//        };
+//    }
 
-    public static ResponseResult Ok(object obj, string message = null!)
-    {
-        return new ResponseResult
-        {
-            Content = obj,
-            Message = message ?? "Succeeded.",
-            StatusCode = StatusCode.OK,
-        };
-    }
+//    public static ResponseResult Ok(string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Message = message ?? "Succeeded.",
+//            StatusCode = StatusCode.OK
+//        };
+//    }
 
-    public static ResponseResult Created(string message = null!)
-    {
-        return new ResponseResult
-        {
-            Message = message ?? "Created.",
-            StatusCode = StatusCode.CREATED
-        };
-    }
+//    public static ResponseResult Ok(object obj, string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Content = obj,
+//            Message = message ?? "Succeeded.",
+//            StatusCode = StatusCode.OK,
+//        };
+//    }
 
-    public static ResponseResult Created(object obj, string message = null!)
-    {
-        return new ResponseResult
-        {
-            Content = obj,
-            Message = message ?? "Created.",
-            StatusCode = StatusCode.CREATED
-        };
-    }
+//    public static ResponseResult Created(string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Message = message ?? "Created.",
+//            StatusCode = StatusCode.CREATED
+//        };
+//    }
 
-    public static ResponseResult BadRequest(string message = null!)
-    {
-        return new ResponseResult
-        {
-            Message = message ?? "Failed.",
-            StatusCode = StatusCode.BAD_REQUEST,
-        };
-    }
+//    public static ResponseResult Created(object obj, string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Content = obj,
+//            Message = message ?? "Created.",
+//            StatusCode = StatusCode.CREATED
+//        };
+//    }
 
-    public static ResponseResult NotFound(string message = null!)
-    {
-        return new ResponseResult
-        {
-            Message = message ?? "Not found.",
-            StatusCode = StatusCode.NOT_FOUND,
-        };
-    }
+//    public static ResponseResult BadRequest(string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Message = message ?? "Failed.",
+//            StatusCode = StatusCode.BAD_REQUEST,
+//        };
+//    }
 
-    public static ResponseResult Exists(string message = null!)
-    {
-        return new ResponseResult
-        {
-            Message = message ?? "Exists.",
-            StatusCode = StatusCode.EXISTS,
-        };
-    }
-}
+//    public static ResponseResult NotFound(string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Message = message ?? "Not found.",
+//            StatusCode = StatusCode.NOT_FOUND,
+//        };
+//    }
+
+//    public static ResponseResult Exists(string message = null!)
+//    {
+//        return new ResponseResult
+//        {
+//            Message = message ?? "Exists.",
+//            StatusCode = StatusCode.EXISTS,
+//        };
+//    }
+//}

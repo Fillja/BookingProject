@@ -19,10 +19,10 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
         {
             var createResult = await _chairService.CreateChairAsync(model);
 
-            if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.CREATED)
+            if (createResult.StatusCode.Equals(0))
                 return Created($"/api/chair/create/{createResult.Content}", createResult.Content);
 
-            else if (createResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            else if (createResult.StatusCode.Equals(2))
                 return NotFound(createResult.Message);
 
             return BadRequest(createResult.Message);
@@ -36,10 +36,10 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     {
         var listResult = await _chairRepository.GetAllAsync();
 
-        if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if (listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);
 
-        else if (listResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if (listResult.StatusCode.Equals(2))
             return NotFound(listResult.Message);
 
         return BadRequest(listResult.Message);
@@ -50,26 +50,26 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     {
         var getResult = await _chairRepository.GetOneAsync(x => x.Id == id);
 
-        if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if (getResult.StatusCode.Equals(0))
             return Ok(getResult.Content);
 
-        else if (getResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if (getResult.StatusCode.Equals(2))
             return NotFound(getResult.Message);
 
         return BadRequest(getResult.Message);
     }
 
     [HttpPut("update/{id}")]
-    public async Task<IActionResult> Update(ChairUpdateModel model)
+    public async Task<IActionResult> Update(string id, ChairUpdateModel model)
     {
         if (ModelState.IsValid)
         {
-            var updateResult = await _chairService.UpdateChairAsync(model);
+            var updateResult = await _chairService.UpdateChairAsync(id, model);
 
-            if (updateResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+            if (updateResult.StatusCode.Equals(0))
                 return Ok(updateResult.Content);
 
-            else if (updateResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+            else if (updateResult.StatusCode.Equals(2))
                 return NotFound(updateResult.Message);
 
             return BadRequest(updateResult.Message);
@@ -83,10 +83,10 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     {
         var deleteResult = await _chairRepository.DeleteAsync(x => x.Id == id);
 
-        if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.OK)
+        if (deleteResult.StatusCode.Equals(0))
             return Ok(deleteResult.Message);
 
-        else if (deleteResult.StatusCode == Infrastructure.Helpers.StatusCode.NOT_FOUND)
+        else if (deleteResult.StatusCode.Equals(2))
             return NotFound(deleteResult.Message);
 
         return BadRequest(deleteResult.Message);

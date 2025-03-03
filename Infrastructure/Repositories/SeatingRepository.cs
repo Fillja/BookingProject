@@ -20,14 +20,14 @@ public class SeatingRepository(DataContext context) : BaseRepository<SeatingEnti
                 .ToListAsync();
 
             if (!seatingList.Any())
-                return ResponseFactory.NotFound("List is empty.");
+                return ResponseResult.Result(2, "List is empty.");
 
-            return ResponseFactory.Ok(seatingList, "List was found.");
+            return ResponseResult.Result(0, "List was found.", seatingList);
 
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 
@@ -41,14 +41,14 @@ public class SeatingRepository(DataContext context) : BaseRepository<SeatingEnti
                 .Include(s => s.Chair)
                 .ToListAsync();
 
-            if (seatingList.Any())
-                return ResponseFactory.Ok(seatingList);
+            if (!seatingList.Any())
+                return ResponseResult.Result(2, "List is empty.");
 
-            return ResponseFactory.NotFound("List is empty.");
+            return ResponseResult.Result(0, "List was found.", seatingList);
         }
         catch (Exception ex)
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 

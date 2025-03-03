@@ -19,13 +19,13 @@ public class TableRepository(DataContext context) : BaseRepository<TableEntity>(
                 .ToListAsync();
 
             if (!tableList.Any())
-                return ResponseFactory.NotFound("List is empty.");
+                return ResponseResult.Result(2, "List is empty.");
 
-            return ResponseFactory.Ok(tableList, "List was found.");
+            return ResponseResult.Result(0, "List was found.", tableList);
         }
         catch (Exception ex) 
         {
-            return ResponseFactory.BadRequest(ex.Message);
+            return ResponseResult.Result(1, ex.Message);
         }
     }
 }

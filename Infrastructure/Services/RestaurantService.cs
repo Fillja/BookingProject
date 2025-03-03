@@ -13,8 +13,8 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
     public async Task<ResponseResult> CreateRestaurantAsync(RestaurantModel model)
     {
         var existResult = await _restaurantRepository.ExistsAsync(x => x.Name == model.RestaurantName);
-        if (existResult.StatusCode == StatusCode.EXISTS)
-            return ResponseFactory.Exists("That entity already exists.");
+        if (existResult.HasFailed)
+            return existResult;
 
         var restaurantEntity = new RestaurantEntity
         {
@@ -29,7 +29,7 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
     public async Task<ResponseResult> UpdateRestaurantAsync(RestaurantModel model, string id)
     {
         var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
-        if (HttpErrorHandler.HasHttpError(getResult))
+        if (getResult.HasFailed)
             return getResult;
 
         var entityToUpdate = (RestaurantEntity)getResult.Content!;
