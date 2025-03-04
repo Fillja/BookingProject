@@ -18,7 +18,7 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
     {
         if (ModelState.IsValid)
         {
-            var createResult = await _seatingService.CreateSeatingAsync(model);
+            var createResult = await _seatingService.CreateCompleteSeatingAsync(model);
 
             if (createResult.StatusCode.Equals(0))
                 return Created($"/api/seating/create/{createResult.Content}", createResult.Content);
@@ -83,10 +83,10 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         return BadRequest(seatingListResult.Message!);
     }
 
-    [HttpPost("addchair/{chairId}")]
-    public async Task<IActionResult> AddChair(SeatingModel model, string chairId)
+    [HttpPost("addchair")]
+    public async Task<IActionResult> AddChair(SeatingSingleModel model)
     {
-        var createResult = await _seatingService.CreateSeatingEntityAsync(model, chairId);
+        var createResult = await _seatingService.CreateSingleSeatingAsync(model);
 
         if(createResult.StatusCode.Equals(0))
             return Ok(createResult.Message);
@@ -97,10 +97,10 @@ public class SeatingController(SeatingRepository seatingRepository, SeatingServi
         return BadRequest(createResult.Message);
     }
 
-    [HttpDelete("removechair/{chairId}")]
-    public async Task<IActionResult> RemoveChair(SeatingModel model, string chairId)
+    [HttpDelete("removechair")]
+    public async Task<IActionResult> RemoveChair(SeatingSingleModel model)
     {
-        var deleteResult = await _seatingRepository.DeleteAsync(s => s.ChairId == chairId);
+        var deleteResult = await _seatingRepository.DeleteAsync(s => s.ChairId == model.ChairId && s.Table.Id == model.TableId);
 
         if (deleteResult.StatusCode.Equals(0))
             return Ok(deleteResult.Message);

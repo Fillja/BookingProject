@@ -13,7 +13,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     private readonly ChairRepository _chairRepository = chairRepository;
 
     //Creates a COMPLETE seating with several chairs - A list of SeatingEntities
-    public async Task<ResponseResult> CreateSeatingAsync(SeatingCreateModel model)
+    public async Task<ResponseResult> CreateCompleteSeatingAsync(SeatingCreateModel model)
     {
         var seatingList = new List<SeatingEntity>();
 
@@ -43,19 +43,18 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         return createResult;
     }
 
-    //Creates a SINGLE SeatingEntity - Currently used by the API for adding one chair to an already existing Seating
-    public async Task<ResponseResult> CreateSeatingEntityAsync(SeatingModel model, string chairId)
+    //Creates a SINGLE SeatingEntity - Currently used for adding one chair to an already existing Seating
+    public async Task<ResponseResult> CreateSingleSeatingAsync(SeatingSingleModel model)
     {
-        var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == chairId);
+        var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == model.ChairId);
 
         if (getChairResult.HasFailed)
             return getChairResult;
 
         var seatingEntity = new SeatingEntity
         {
-            Name = model.Name,
-            TableId = model.Table.Id,
-            ChairId = chairId,
+            TableId = model.TableId,
+            ChairId = model.ChairId,
         };
 
         var createResult = await _seatingRepository.CreateAsync(seatingEntity);
@@ -74,17 +73,12 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         if(seatingListResult.HasFailed)
             return seatingListResult;
 
-        var seatingModel = CreateSeatingModel((IEnumerable<SeatingEntity>)seatingListResult.Content!, (TableEntity)getTableResult.Content!);
-        return ResponseResult.Result(0, "", seatingModel);
-    }
 
-    //Creates a single sorted seating model for the GetOneSeatingAsync() function
-    public static SeatingModel CreateSeatingModel(IEnumerable<SeatingEntity> seatingList, TableEntity tableEntity)
-    {
+        var seatingList = (IEnumerable<SeatingEntity>)seatingListResult.Content!;
         var seatingModel = new SeatingModel
         {
             Name = seatingList.First().Name,
-            Table = tableEntity,
+            Table = (TableEntity)getTableResult.Content!
         };
 
         foreach (var seatingEntity in seatingList)
@@ -92,9 +86,8 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
             seatingModel.Chairs.Add(seatingEntity.Chair);
         }
 
-        return seatingModel;
+        return ResponseResult.Result(0, "", seatingModel);
     }
-
 
 
     //Instead of returning directly from repo with every instance of the table, we returna list with only one instance of the table with its corresponding chairs per item in list
@@ -104,14 +97,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
         if(listResult.HasFailed)
             return listResult;
 
-
-        var seatingModelList = CreateSeatingModelList((IEnumerable<SeatingEntity>)listResult.Content!);
-        return ResponseResult.Result(0, "", seatingModelList);
-    }
-
-    //Creates a list of sorted seating models for the GetAllSeatingsAsync() function
-    public static List<SeatingModel> CreateSeatingModelList(IEnumerable<SeatingEntity> seatingList)
-    {
+        var seatingList = (IEnumerable<SeatingEntity>)listResult.Content!;
         var seatingModelList = seatingList
             .GroupBy(s => s.TableId)
             .Select(group => new SeatingModel
@@ -122,6 +108,6 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
             })
             .ToList();
 
-        return seatingModelList;
+        return ResponseResult.Result(0, "", seatingModelList);
     }
 }

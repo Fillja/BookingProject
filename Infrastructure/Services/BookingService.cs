@@ -6,41 +6,35 @@ using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class BookingService(BookingRepository bookingRepository, SeatingRepository seatingRepository, ChairRepository chairRepository, TableRepository tableRepository)
+public class BookingService(BookingRepository bookingRepository, SeatingRepository seatingRepository, ChairRepository chairRepository, TableRepository tableRepository, SeatingService seatingService)
 {
     private readonly BookingRepository _bookingRepository = bookingRepository;
     private readonly SeatingRepository _seatingRepository = seatingRepository;
     private readonly ChairRepository _chairRepository = chairRepository;
     private readonly TableRepository _tableRepository = tableRepository;
+    private readonly SeatingService _seatingService = seatingService;
 
-    public async Task<ResponseResult> CreateBookingAsync(BookingModel bookingModel, SeatingBookingModel seatingBookingModel)
+    public async Task<ResponseResult> CreateBookingAsync(BookingCreateModel bookingCreateModel, SeatingBookingModel seatingBookingModel)
     {
         var getSeatingResult = await _seatingRepository.GetOneAsync(x => x.TableId == seatingBookingModel.TableId);
         if(getSeatingResult.HasFailed)
             return getSeatingResult;
 
-        var bookingResult = await BookTableAndChair(seatingBookingModel);
+        var bookingResult = await BookTableAndChairAsync(seatingBookingModel);
         if(bookingResult.HasFailed)
             return bookingResult;
 
-        var bookingEntity = PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingModel);
+        var bookingEntity = EntityFactory.PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingCreateModel);
         var createResult = await _bookingRepository.CreateAsync(bookingEntity);
         return createResult;
 
     }
 
-    public async Task<ResponseResult> BookTableAndChair(SeatingBookingModel seatingBookingModel)
+    public async Task<ResponseResult> BookTableAndChairAsync(SeatingBookingModel seatingBookingModel)
     {
         var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == seatingBookingModel.TableId);
         if (getTableResult.HasFailed)
             return getTableResult;
-
-        var tableEntity = (TableEntity)getTableResult.Content!;
-        tableEntity.IsBooked = true;
-        
-        var updateTableResult = await _tableRepository.UpdateAsync(tableEntity);
-        if (updateTableResult.HasFailed)
-            return updateTableResult;
 
         foreach (var chair in seatingBookingModel.Chairs) 
         {
@@ -48,40 +42,39 @@ public class BookingService(BookingRepository bookingRepository, SeatingReposito
             if (getChairResult.HasFailed)
                 return getChairResult;
                 
-            var chairEntity = PopulateChairEntity((ChairEntity)getChairResult.Content!, chair);
+            var chairEntity = EntityFactory.PopulateChairEntity((ChairEntity)getChairResult.Content!, chair);
 
             var updateResult = await _chairRepository.UpdateAsync(chairEntity);
             if (updateResult.HasFailed)
                 return updateResult;
         }
 
+        var tableEntity = (TableEntity)getTableResult.Content!;
+        tableEntity.IsBooked = true;
+
+        var updateTableResult = await _tableRepository.UpdateAsync(tableEntity);
+        if (updateTableResult.HasFailed)
+            return updateTableResult;
+
         return ResponseResult.Result(0);
     }
 
-    public BookingEntity PopulateBookingEntity(SeatingEntity seatingEntity, BookingModel bookingModel) 
+    public async Task<ResponseResult> GetOneBookingAsync(string id)
     {
-        return(new BookingEntity
-        {
-            BookingStartTime = bookingModel.BookingStartTime,
-            BookingEndTime = bookingModel.BookingStartTime.AddHours(6),
-            BookerName = bookingModel.BookerName,
-            BookerEmail = bookingModel.BookerEmail,
-            BookerPhone = bookingModel.BookerPhone,
-            SpecialRequests = bookingModel.SpecialRequests,
-            SeatingId = seatingEntity.Id,
-            Seating = seatingEntity
-        });
+        var getBookingResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
+        if(getBookingResult.HasFailed)
+            return getBookingResult;
+
+        var bookingEntity = (BookingEntity)getBookingResult.Content!;
+
+        var getSeatingResult = await _seatingService.GetOneSeatingAsync(bookingEntity.Seating!.TableId);
+        if (getSeatingResult.HasFailed)
+            return getSeatingResult;
+
+        var seatingModel = (SeatingModel)getSeatingResult.Content!;
+
+        var completeBooking = EntityFactory.PopulateBookingModel(bookingEntity, seatingModel);
+
+        return ResponseResult.Result(0, "", completeBooking);
     }
-
-    public ChairEntity PopulateChairEntity(ChairEntity chairEntity, ChairUpdateModel chair) 
-    {
-        chairEntity.Vegan = chair.Vegan;
-        chairEntity.Vegetarian = chair.Vegetarian;
-        chairEntity.Gluten = chair.Gluten;
-        chairEntity.Milk = chair.Milk;
-        chairEntity.Eggs = chair.Egg;
-
-        return chairEntity;
-    }
-
 }

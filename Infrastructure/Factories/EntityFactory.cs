@@ -22,9 +22,21 @@ public static class EntityFactory
     }
 
     //Used when updating a chair
-    public static ChairEntity PopulateChairEntity(ChairEntity chairEntity, ChairUpdateModel chairUpdateModel)
+    public static ChairEntity PopulateChairEntity(ChairEntity chairEntity, ChairModel chairModel)
     {
-        chairEntity.Name = chairUpdateModel.Name;
+        chairEntity.Name = chairModel.Name;
+        chairEntity.Vegan = chairModel.Vegan;
+        chairEntity.Vegetarian = chairModel.Vegetarian;
+        chairEntity.Gluten = chairModel.Gluten;
+        chairEntity.Milk = chairModel.Milk;
+        chairEntity.Eggs = chairModel.Egg;
+
+        return chairEntity;
+    }
+
+    //Used when booking a chair
+    public static ChairEntity PopulateChairEntity(ChairEntity chairEntity, ChairBookingModel chairUpdateModel)
+    {
         chairEntity.Vegan = chairUpdateModel.Vegan;
         chairEntity.Vegetarian = chairUpdateModel.Vegetarian;
         chairEntity.Gluten = chairUpdateModel.Gluten;
@@ -48,28 +60,43 @@ public static class EntityFactory
     }
 
     //Used when updating a table
-    public static TableEntity PopulateTableEntity(TableEntity tableEntity, TableUpdateModel tableUpdateModel)
+    public static TableEntity PopulateTableEntity(TableEntity tableEntity, TableModel tableModel)
     {
-        tableEntity.Name = tableUpdateModel.Name;
-        tableEntity.Size = tableUpdateModel.Size;
-        tableEntity.IsBooked = tableUpdateModel.IsBooked;
+        tableEntity.Name = tableModel.Name;
+        tableEntity.Size = tableModel.Size;
+        tableEntity.IsBooked = tableModel.IsBooked;
 
         return tableEntity;
     }
 
     //Used when creating a booking
-    public static BookingEntity PopulateBookingEntity(SeatingEntity seatingEntity, BookingModel bookingModel)
+    public static BookingEntity PopulateBookingEntity(SeatingEntity seatingEntity, BookingCreateModel bookingCreateModel)
     {
         return (new BookingEntity
         {
-            BookingStartTime = bookingModel.BookingStartTime,
-            BookingEndTime = bookingModel.BookingStartTime.AddHours(6),
-            BookerName = bookingModel.BookerName,
-            BookerEmail = bookingModel.BookerEmail,
-            BookerPhone = bookingModel.BookerPhone,
-            SpecialRequests = bookingModel.SpecialRequests,
+            BookingStartTime = bookingCreateModel.BookingStartTime,
+            BookingEndTime = bookingCreateModel.BookingStartTime.AddHours(6),
+            BookerName = bookingCreateModel.BookerName,
+            BookerEmail = bookingCreateModel.BookerEmail,
+            BookerPhone = bookingCreateModel.BookerPhone,
+            SpecialRequests = bookingCreateModel.SpecialRequests,
             SeatingId = seatingEntity.Id,
             Seating = seatingEntity
         });
+    }
+
+    public static BookingModel PopulateBookingModel(BookingEntity bookingEntity, SeatingModel seatingModel) 
+    {
+        return new BookingModel
+        {
+            CreatedDate = bookingEntity.CreatedDate,
+            BookingStartTime = bookingEntity.BookingStartTime,
+            BookingEndTime = bookingEntity.BookingEndTime,
+            BookerName = bookingEntity.BookerName,
+            BookerEmail = bookingEntity.BookerEmail,
+            BookerPhone = bookingEntity.BookerPhone,
+            SpecialRequests = bookingEntity.SpecialRequests,
+            Seating = seatingModel
+        };
     }
 }

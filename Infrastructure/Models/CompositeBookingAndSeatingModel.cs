@@ -2,7 +2,7 @@
 
 public class CompositeBookingAndSeatingModel
 {
-    public BookingModel Booking { get; set; } = null!;
+    public BookingCreateModel Booking { get; set; } = null!;
 
     public SeatingBookingModel Seating { get; set; } = null!;
 }

@@ -43,7 +43,7 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     [HttpGet("getone/{id}")]
     public async Task<IActionResult> GetOne(string id)
     {
-        var getBookingResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
+        var getBookingResult = await _bookingService.GetOneBookingAsync(id);
 
         if(getBookingResult.StatusCode.Equals(0))
             return Ok(getBookingResult.Content);

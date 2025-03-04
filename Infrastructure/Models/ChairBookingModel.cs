@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Models;
 
-public class ChairUpdateModel
+public class ChairBookingModel
 {
     public string ChairId { get; set; } = null!;
     public string? Name { get; set; }

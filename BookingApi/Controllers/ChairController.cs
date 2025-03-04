@@ -60,7 +60,7 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
     }
 
     [HttpPut("update/{id}")]
-    public async Task<IActionResult> Update(string id, ChairUpdateModel model)
+    public async Task<IActionResult> Update(string id, ChairModel model)
     {
         if (ModelState.IsValid)
         {

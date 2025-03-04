@@ -13,45 +13,29 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
 
     public async Task<ResponseResult> CreateTableAsync(TableModel tableModel)
     {
-        var getResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == tableModel.RestaurantName!.ToLower());
-        if (getResult.HasFailed)
-            return getResult;
+        var getRestaurantResult = await _restaurantRepository.GetOneAsync(x => x.Name.ToLower() == tableModel.RestaurantName!.ToLower());
+        if (getRestaurantResult.HasFailed)
+        {
+            if (getRestaurantResult.StatusCode == 2)
+                getRestaurantResult.Message = "Restaurant could not be found";
 
-        var tableEntity = PopulateTableEntity((RestaurantEntity)getResult.Content!, tableModel);
+            return getRestaurantResult;
+        }
+
+        var tableEntity = EntityFactory.PopulateTableEntity((RestaurantEntity)getRestaurantResult.Content!, tableModel);
         var createResult = await _tableRepository.CreateAsync(tableEntity);
         return createResult;
 
     }
 
-    public async Task<ResponseResult> UpdateTableAsync(string id, TableUpdateModel tableUpdateModel)
+    public async Task<ResponseResult> UpdateTableAsync(string id, TableModel tableModel)
     {
         var getResult = await _tableRepository.GetOneAsync(x => x.Id == id);
         if (getResult.HasFailed)
             return getResult;
 
-        var entityToUpdate = PopulateTableEntity((TableEntity)getResult.Content!, tableUpdateModel);
+        var entityToUpdate = EntityFactory.PopulateTableEntity((TableEntity)getResult.Content!, tableModel);
         var updateResult = await _tableRepository.UpdateAsync(entityToUpdate);
         return updateResult;
-    }
-
-    public TableEntity PopulateTableEntity(RestaurantEntity restaurantEntity, TableModel tableModel)
-    {
-        return (new TableEntity
-        {
-            Name = tableModel.Name,
-            Size = tableModel.Size,
-            IsBooked = tableModel.IsBooked,
-            Restaurant = restaurantEntity,
-            RestaurantId = restaurantEntity.Id,
-        });
-    }
-
-    public TableEntity PopulateTableEntity(TableEntity tableEntity, TableUpdateModel tableUpdateModel)
-    {
-        tableEntity.Name = tableUpdateModel.Name;
-        tableEntity.Size = tableUpdateModel.Size;
-        tableEntity.IsBooked = tableUpdateModel.IsBooked;
-
-        return tableEntity;
     }
 }

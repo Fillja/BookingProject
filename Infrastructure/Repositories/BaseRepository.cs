@@ -123,7 +123,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
     
             var entity = (TEntity)result.Content!;
 
-            _context.Set<TEntity>().Remove(entity);
+            _context.Remove(entity);
             await _context.SaveChangesAsync();
 
             return ResponseResult.Result(0, "Successfully deleted.");
@@ -141,7 +141,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         {
             foreach(var entity in entityList)
             {
-                _context.Set<TEntity>().Remove(entity);
+                _context.Remove(entity);
             }
             await _context.SaveChangesAsync();
 

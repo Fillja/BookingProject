@@ -1,16 +1,13 @@
 ﻿namespace Infrastructure.Helpers;
 
-
-//public enum StatusCode
-//{
-//    OK = 0,
-//    FAILED = 1,
-//    NOT_FOUND = 2,
-//    CONFLICT = 3
-//}
-
 public class ResponseResult
 {
+    //    STATUSCODES:
+    //    OK = 0,
+    //    FAILED = 1,
+    //    NOT_FOUND = 2,
+    //    CONFLICT = 3
+
     public int StatusCode { get; set; }
     public object? Content { get; set; }
     public string? Message { get; set; }

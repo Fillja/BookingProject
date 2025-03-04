@@ -60,7 +60,7 @@ public class TableController(TableRepository tableRepository, TableService table
     }
 
     [HttpPut("update/{id}")]
-    public async Task<IActionResult> Update(string id, TableUpdateModel model)
+    public async Task<IActionResult> Update(string id, TableModel model)
     {
         if (ModelState.IsValid)
         {
