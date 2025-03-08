@@ -70,21 +70,35 @@ public static class EntityFactory
     }
 
     //Used when creating a booking
-    public static BookingEntity PopulateBookingEntity(SeatingEntity seatingEntity, BookingCreateModel bookingCreateModel)
+    public static BookingEntity PopulateBookingEntity(SeatingEntity seatingEntity, BookingMinimalModel bookingMinimalModel)
     {
         return (new BookingEntity
         {
-            BookingStartTime = bookingCreateModel.BookingStartTime,
-            BookingEndTime = bookingCreateModel.BookingStartTime.AddHours(6),
-            BookerName = bookingCreateModel.BookerName,
-            BookerEmail = bookingCreateModel.BookerEmail,
-            BookerPhone = bookingCreateModel.BookerPhone,
-            SpecialRequests = bookingCreateModel.SpecialRequests,
+            BookingStartTime = bookingMinimalModel.BookingStartTime,
+            BookingEndTime = bookingMinimalModel.BookingStartTime.AddHours(6),
+            BookerName = bookingMinimalModel.BookerName,
+            BookerEmail = bookingMinimalModel.BookerEmail,
+            BookerPhone = bookingMinimalModel.BookerPhone,
+            SpecialRequests = bookingMinimalModel.SpecialRequests,
             SeatingId = seatingEntity.Id,
             Seating = seatingEntity
         });
     }
 
+    //Used when updating a booking
+    public static BookingEntity PopulateBookingEntity(BookingEntity bookingEntity, BookingMinimalModel bookingMinimalModel) 
+    {
+        bookingEntity.BookingStartTime = bookingMinimalModel.BookingStartTime;
+        bookingEntity.BookingEndTime = bookingMinimalModel.BookingStartTime.AddHours(6);
+        bookingEntity.BookerName = bookingMinimalModel.BookerName;
+        bookingEntity.BookerEmail = bookingMinimalModel.BookerEmail;
+        bookingEntity.BookerPhone = bookingMinimalModel.BookerPhone;
+        bookingEntity.SpecialRequests = bookingMinimalModel.SpecialRequests;
+
+        return bookingEntity;
+    }
+
+    //Used when return one complete booking
     public static BookingModel PopulateBookingModel(BookingEntity bookingEntity, SeatingModel seatingModel) 
     {
         return new BookingModel

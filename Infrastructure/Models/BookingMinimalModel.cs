@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Models;
 
-public class BookingCreateModel
+public class BookingMinimalModel
 {
     public DateTime BookingStartTime { get; set; }
 

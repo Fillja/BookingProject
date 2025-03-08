@@ -14,7 +14,7 @@ public class BookingService(BookingRepository bookingRepository, SeatingReposito
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly SeatingService _seatingService = seatingService;
 
-    public async Task<ResponseResult> CreateBookingAsync(BookingCreateModel bookingCreateModel, SeatingBookingModel seatingBookingModel)
+    public async Task<ResponseResult> CreateBookingAsync(BookingMinimalModel bookingMinimalModel, SeatingBookingModel seatingBookingModel)
     {
         var getSeatingResult = await _seatingRepository.GetOneAsync(x => x.TableId == seatingBookingModel.TableId);
         if(getSeatingResult.HasFailed)
@@ -24,7 +24,7 @@ public class BookingService(BookingRepository bookingRepository, SeatingReposito
         if(bookingResult.HasFailed)
             return bookingResult;
 
-        var bookingEntity = EntityFactory.PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingCreateModel);
+        var bookingEntity = EntityFactory.PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingMinimalModel);
         var createResult = await _bookingRepository.CreateAsync(bookingEntity);
         return createResult;
 
@@ -76,5 +76,46 @@ public class BookingService(BookingRepository bookingRepository, SeatingReposito
         var completeBooking = EntityFactory.PopulateBookingModel(bookingEntity, seatingModel);
 
         return ResponseResult.Result(0, "", completeBooking);
+    }
+
+    public async Task<ResponseResult> UpdateBookingAsync(string id, BookingMinimalModel bookingMinimalModel)
+    {
+        var getResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
+        if (getResult.HasFailed) 
+            return getResult;
+
+        var entityToUpdate = EntityFactory.PopulateBookingEntity((BookingEntity)getResult.Content!,bookingMinimalModel);
+        var updateResult = await _bookingRepository.UpdateAsync(entityToUpdate);
+        return updateResult;
+    }
+
+    public async Task<ResponseResult> DeleteBookingAsync(string id)
+    {
+        var getBookingResult = await GetOneBookingAsync(id);
+        var completeBooking = (BookingModel)getBookingResult.Content!;
+
+        TableEntity bookedTable = completeBooking.Seating.Table;
+        bookedTable.IsBooked = false;
+
+        var updateTableResult = await _tableRepository.UpdateAsync(bookedTable);
+        if(updateTableResult.HasFailed) 
+            return updateTableResult;
+
+        List<ChairEntity> bookingChairs = completeBooking.Seating.Chairs;
+        foreach(var bookedChair in bookingChairs)
+        {
+            bookedChair.Vegetarian = false;
+            bookedChair.Vegan = false;
+            bookedChair.Eggs = false;
+            bookedChair.Gluten = false;
+            bookedChair.Milk = false;
+
+            var updateChairResult = await _chairRepository.UpdateAsync(bookedChair);
+            if(updateChairResult.HasFailed)
+                return updateChairResult;
+        }
+
+        var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == id);
+        return deleteResult;
     }
 }

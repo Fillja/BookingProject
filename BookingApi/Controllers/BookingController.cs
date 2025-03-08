@@ -15,6 +15,8 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
     [HttpPost("create")]
     public async Task<IActionResult> Create(CompositeBookingAndSeatingModel compositeModel)
     {
+        if (ModelState.IsValid) 
+        {
             var createResult = await _bookingService.CreateBookingAsync(compositeModel.Booking, compositeModel.Seating);
 
             if (createResult.StatusCode.Equals(0))
@@ -24,6 +26,9 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
                 return NotFound(createResult.Message);
 
             return BadRequest(createResult.Message);
+        }
+
+        return BadRequest("Invalid fields.");
     }
 
     [HttpGet("getall")]
@@ -54,16 +59,29 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
         return BadRequest(getBookingResult.Message);
     }
 
-    //[HttpPut("update/{id}")]
-    //public async Task<IActionResult> Update(string id)
-    //{
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> Update(string id, BookingMinimalModel bookingMinimalModel)
+    {
+        if (ModelState.IsValid) 
+        {
+            var updateResult = await _bookingService.UpdateBookingAsync(id, bookingMinimalModel);
 
-    //}
+            if (updateResult.StatusCode.Equals(0))
+                return Ok(updateResult.Content);
+
+            else if (updateResult.StatusCode.Equals(2))
+                return NotFound(updateResult.Message);
+
+            return BadRequest(updateResult.Message);
+        }
+
+        return BadRequest("Invalid fields.");
+    }
 
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == id);
+        var deleteResult = await _bookingService.DeleteBookingAsync(id);
 
         if(deleteResult.StatusCode.Equals(0))
             return Ok(deleteResult.Message);
