@@ -11,11 +11,12 @@ public class BookingRepository(DataContext context) : BaseRepository<BookingEnti
 {
     private readonly DataContext _context = context;
 
-    public override async Task<ResponseResult> GetAllAsync()
+    public override async Task<ResponseResult> GetAllAsync(string restaurantId)
     {
         try
         {
             IEnumerable<BookingEntity> bookingList = await _context.Bookings
+                .Where(b => b.Seating!.Table.RestaurantId == restaurantId)
                 .Include(b => b.Seating)
                 .ToListAsync();
 

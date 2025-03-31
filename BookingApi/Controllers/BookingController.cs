@@ -31,10 +31,10 @@ public class BookingController(BookingRepository bookingRepository, BookingServi
         return BadRequest("Invalid fields.");
     }
 
-    [HttpGet("getall")]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("getall/{restaurantId}")]
+    public async Task<IActionResult> GetAll(string restaurantId)
     {
-        var listResult = await _bookingRepository.GetAllAsync();
+        var listResult = await _bookingRepository.GetAllAsync(restaurantId);
 
         if(listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);

@@ -10,11 +10,12 @@ public class TableRepository(DataContext context) : BaseRepository<TableEntity>(
 {
     private readonly DataContext _context = context;
 
-    public override async Task<ResponseResult> GetAllAsync()
+    public override async Task<ResponseResult> GetAllAsync(string restaurantId)
     {
         try
         {
             IEnumerable<TableEntity> tableList = await _context.Tables
+                .Where(t => t.RestaurantId == restaurantId)
                 .Include(t => t.Restaurant)
                 .ToListAsync();
 

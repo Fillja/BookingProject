@@ -49,7 +49,26 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
+    //GetAll that is used when no restaurant has to be declared
     public virtual async Task<ResponseResult> GetAllAsync()
+    {
+        try
+        {
+            IEnumerable<TEntity> entityList = await _context.Set<TEntity>().ToListAsync();
+            if (!entityList.Any())
+                return ResponseResult.Result(2, "List is empty");
+
+            return ResponseResult.Result(0, "List was found.", entityList);
+
+        }
+        catch (Exception ex)
+        {
+            return ResponseResult.Result(1, ex.Message);
+        }
+    }
+
+    //GetAll overload specifically for getting entities tied to a restaurant
+    public virtual async Task<ResponseResult> GetAllAsync(string id)
     {
         try
         {

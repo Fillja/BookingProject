@@ -31,10 +31,10 @@ public class TableController(TableRepository tableRepository, TableService table
         return BadRequest("Invalid fields.");
     }
 
-    [HttpGet("getall")]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("getall/{restaurantId}")]
+    public async Task<IActionResult> GetAll(string restaurantId)
     {
-        var listResult = await _tableRepository.GetAllAsync();
+        var listResult = await _tableRepository.GetAllAsync(restaurantId);
 
         if (listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);

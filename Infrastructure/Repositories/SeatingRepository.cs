@@ -10,11 +10,12 @@ public class SeatingRepository(DataContext context) : BaseRepository<SeatingEnti
 {
     private readonly DataContext _context = context;
 
-    public override async Task<ResponseResult> GetAllAsync()
+    public override async Task<ResponseResult> GetAllAsync(string restaurantId)
     {
         try
         {
             IEnumerable<SeatingEntity> seatingList = await _context.Seatings
+                .Where(s => s.Table.RestaurantId == restaurantId)
                 .Include(s => s.Table)
                 .Include(s => s.Chair)
                 .ToListAsync();

@@ -31,10 +31,10 @@ public class ChairController(ChairService chairService, ChairRepository chairRep
         return BadRequest("Invalid fields.");
     }
 
-    [HttpGet("getall")]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("getall/{restaurantId}")]
+    public async Task<IActionResult> GetAll(string restaurantId)
     {
-        var listResult = await _chairRepository.GetAllAsync();
+        var listResult = await _chairRepository.GetAllAsync(restaurantId);
 
         if (listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);

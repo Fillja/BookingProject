@@ -91,11 +91,11 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
 
 
     //Instead of returning directly from repo with every instance of the table, we returna list with only one instance of the table with its corresponding chairs per item in list
-    public async Task<ResponseResult> GetAllSeatingsAsync()
+    public async Task<ResponseResult> GetAllSeatingsAsync(string restaurantId)
     {
-        var listResult = await _seatingRepository.GetAllAsync();
+        var listResult = await _seatingRepository.GetAllAsync(restaurantId);
         if(listResult.HasFailed)
-            return listResult;
+            return listResult!;
 
         var seatingList = (IEnumerable<SeatingEntity>)listResult.Content!;
         var seatingModelList = seatingList
