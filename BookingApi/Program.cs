@@ -19,7 +19,6 @@ builder.Services.AddScoped<BookingRepository>();
 
 
 //DI Services
-builder.Services.AddScoped<RestaurantService>();
 builder.Services.AddScoped<ChairService>();
 builder.Services.AddScoped<TableService>();
 builder.Services.AddScoped<SeatingService>();

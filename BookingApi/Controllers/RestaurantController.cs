@@ -7,10 +7,12 @@ namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RestaurantController(RestaurantRepository restaurantRepository, RestaurantService restaurantService) : ControllerBase
+public class RestaurantController(RestaurantRepository restaurantRepository) : ControllerBase
 {
-    private readonly RestaurantService _restaurantService = restaurantService;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
+
+    /*
+    ADMINISTRATING RESTAURANTS SHOULD NOT BE EXPOSED IN ENDPOINTS - WILL INSTEAD BE MANAGED BY DEVELOPER IN SQL
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(RestaurantModel model)
@@ -30,6 +32,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
 
         return BadRequest("Invalid fields.");
     }
+    */
 
     [HttpGet("getall")]
     public async Task<IActionResult> GetAll()
@@ -59,6 +62,9 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
         return BadRequest(getResult.Message);
     }
 
+    /*
+    ADMINISTRATING RESTAURANTS SHOULD NOT BE EXPOSED IN ENDPOINTS - WILL INSTEAD BE MANAGED BY DEVELOPER IN SQL
+
     [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(RestaurantModel model, string id)
     {
@@ -77,7 +83,11 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
 
         return BadRequest("Invalid fields.");
     }
+    */
 
+    /*
+    ADMINISTRATING RESTAURANTS SHOULD NOT BE EXPOSED IN ENDPOINTS - WILL INSTEAD BE MANAGED BY DEVELOPER IN SQL
+    
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(string id)
     {
@@ -91,4 +101,5 @@ public class RestaurantController(RestaurantRepository restaurantRepository, Res
 
         return BadRequest(deleteResult.Message);
     }
+    */
 }

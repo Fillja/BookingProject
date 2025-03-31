@@ -1,42 +1,47 @@
 ﻿using Infrastructure.Entities;
-using Infrastructure.Factories;
 using Infrastructure.Helpers;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class RestaurantService(RestaurantRepository restaurantRepository)
-{
-    private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
 
-    public async Task<ResponseResult> CreateRestaurantAsync(RestaurantModel model)
-    {
-        var existResult = await _restaurantRepository.ExistsAsync(x => x.Name == model.RestaurantName);
-        if (existResult.HasFailed)
-            return existResult;
+/*
+    RESTAURANT MANAGMENT IS DEVELOPER-ONLY & IS WITHHELD TO SQL.
+    API FOR RESTAURANT IS READ-ONLY
+*/
 
-        var restaurantEntity = new RestaurantEntity
-        {
-            Name = model.RestaurantName,
-            Location = model.Location,
-        };
+//public class RestaurantService(RestaurantRepository restaurantRepository)
+//{
+//    private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
 
-        var createResult = await _restaurantRepository.CreateAsync(restaurantEntity);
-        return createResult;
-    }
+//    public async Task<ResponseResult> CreateRestaurantAsync(RestaurantModel model)
+//    {
+//        var existResult = await _restaurantRepository.ExistsAsync(x => x.Name == model.RestaurantName);
+//        if (existResult.HasFailed)
+//            return existResult;
 
-    public async Task<ResponseResult> UpdateRestaurantAsync(RestaurantModel model, string id)
-    {
-        var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
-        if (getResult.HasFailed)
-            return getResult;
+//        var restaurantEntity = new RestaurantEntity
+//        {
+//            Name = model.RestaurantName,
+//            Location = model.Location,
+//        };
 
-        var entityToUpdate = (RestaurantEntity)getResult.Content!;
-        entityToUpdate.Name = model.RestaurantName;
-        entityToUpdate.Location = model.Location;
+//        var createResult = await _restaurantRepository.CreateAsync(restaurantEntity);
+//        return createResult;
+//    }
 
-        var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate);
-        return updateResult;
-    }
-}
+//    public async Task<ResponseResult> UpdateRestaurantAsync(RestaurantModel model, string id)
+//    {
+//        var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
+//        if (getResult.HasFailed)
+//            return getResult;
+
+//        var entityToUpdate = (RestaurantEntity)getResult.Content!;
+//        entityToUpdate.Name = model.RestaurantName;
+//        entityToUpdate.Location = model.Location;
+
+//        var updateResult = await _restaurantRepository.UpdateAsync(entityToUpdate);
+//        return updateResult;
+//    }
+//}
