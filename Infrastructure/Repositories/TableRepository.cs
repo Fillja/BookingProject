@@ -24,7 +24,7 @@ public class TableRepository(DataContext context) : BaseRepository<TableEntity>(
 
             return ResponseResult.Result(0, "List was found.", tableList);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             return ResponseResult.Result(1, ex.Message);
         }

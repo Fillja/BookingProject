@@ -6,7 +6,7 @@
 }
 
 .wrapper {
-    height: 100dvh;
+    min-height: 100dvh;
     display: grid;
     grid-template-rows: auto 1fr auto;
 }
@@ -39,6 +39,27 @@ section{
     padding: 4rem 0;
 }
 
+.mobile-hidden {
+    @media(max-width: 768px) {
+        visibility: hidden !important;
+        display: none !important;
+    }
+}
+
+.tablet-hidden {
+    @media(max-width: 996px) {
+        visibility: hidden !important;
+        display: none !important;
+    }
+}
+
+.desktop-hidden {
+    @include tablet {
+        visibility: hidden !important;
+        display: none !important;
+    }
+}
+
 //GENERIC COMPONENTS
 .icon-wrapper {
     i {
@@ -69,8 +90,15 @@ section{
 
     .content-item {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
         align-items: center;
+
+        @include mobile {
+            flex-direction: row;
+            justify-content: space-between;
+        }
 
         h5 {
             i {

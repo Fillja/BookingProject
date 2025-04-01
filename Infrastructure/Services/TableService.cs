@@ -1,12 +1,13 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class TableService(TableRepository tableRepository, RestaurantRepository restaurantRepository)
+public class TableService(TableRepository tableRepository, RestaurantRepository restaurantRepository) : ITableService
 {
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;

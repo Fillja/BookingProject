@@ -7,7 +7,7 @@
             </a>
         </div>
 
-        <nav class="link-container">
+        <nav class="link-container tablet-hidden">
             <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Home" ? "active-link" : "")" asp-controller="Home" asp-action="Index">Home</a>
             <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Bookings" ? "active-link" : "")" asp-controller="Booking" asp-action="Index">Bookings</a>
             <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Seatings" ? "active-link" : "")" asp-controller="Seatings" asp-action="Index">Seatings</a>

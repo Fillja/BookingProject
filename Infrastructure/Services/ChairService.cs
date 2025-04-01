@@ -1,12 +1,13 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class ChairService(ChairRepository chairRepository, RestaurantRepository restaurantRepository)
+public class ChairService(ChairRepository chairRepository, RestaurantRepository restaurantRepository) : IChairService
 {
     private readonly ChairRepository _chairRepository = chairRepository;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
@@ -31,7 +32,7 @@ public class ChairService(ChairRepository chairRepository, RestaurantRepository 
     public async Task<ResponseResult> UpdateChairAsync(string id, ChairModel chairModel)
     {
         var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == id);
-        if(getChairResult.HasFailed)
+        if (getChairResult.HasFailed)
             return getChairResult;
 
         var entityToUpdate = EntityFactory.PopulateChairEntity((ChairEntity)getChairResult.Content!, chairModel);

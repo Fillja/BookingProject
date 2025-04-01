@@ -1,12 +1,12 @@
 ﻿using Infrastructure.Entities;
-using Infrastructure.Factories;
 using Infrastructure.Helpers;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class SeatingService(SeatingRepository seatingRepository, TableRepository tableRepository, ChairRepository chairRepository)
+public class SeatingService(SeatingRepository seatingRepository, TableRepository tableRepository, ChairRepository chairRepository) : ISeatingService
 {
     private readonly SeatingRepository _seatingRepository = seatingRepository;
     private readonly TableRepository _tableRepository = tableRepository;
@@ -66,11 +66,11 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     public async Task<ResponseResult> GetOneSeatingAsync(string tableId)
     {
         var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == tableId);
-        if(getTableResult.HasFailed)
+        if (getTableResult.HasFailed)
             return getTableResult;
 
         var seatingListResult = await _seatingRepository.GetAllWithTableIdAsync(tableId);
-        if(seatingListResult.HasFailed)
+        if (seatingListResult.HasFailed)
             return seatingListResult;
 
 
@@ -94,7 +94,7 @@ public class SeatingService(SeatingRepository seatingRepository, TableRepository
     public async Task<ResponseResult> GetAllSeatingsAsync(string restaurantId)
     {
         var listResult = await _seatingRepository.GetAllAsync(restaurantId);
-        if(listResult.HasFailed)
+        if (listResult.HasFailed)
             return listResult!;
 
         var seatingList = (IEnumerable<SeatingEntity>)listResult.Content!;

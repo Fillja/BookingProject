@@ -6,4 +6,5 @@ public class HomeViewModel
     public string RestaurantName { get; set; } = null!;
     public int Bookings { get; set; }
     public int Seatings { get; set; }
+    public string? ErrorMessage { get; set; }
 }

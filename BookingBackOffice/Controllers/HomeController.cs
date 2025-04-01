@@ -1,18 +1,44 @@
 using BookingBackOffice.Models.Home;
+using Infrastructure.Entities;
+using Infrastructure.Interfaces;
+using Infrastructure.Models;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IBookingService bookingService, ISeatingService seatingService, BookingRepository bookingRepository) : Controller
     {
-        public IActionResult Index()
+        private readonly IBookingService _bookingService = bookingService;
+        private readonly ISeatingService _seatingService = seatingService;
+        private readonly BookingRepository _bookingRepository = bookingRepository;
+
+        public async Task<IActionResult> Index()
         {
-            var homeModel = new HomeViewModel
+            var homeModel = new HomeViewModel();
+            homeModel.RestaurantName = "Restaurant1";
+
+            var seatingListResult = await _seatingService.GetAllSeatingsAsync("Restaurant1");
+            if (seatingListResult.HasFailed)
             {
-                RestaurantName = "The Restaurant",
-                Bookings = 10,
-                Seatings = 20
-            };
+                homeModel.ErrorMessage = seatingListResult.Message;
+                return View(homeModel);
+            }
+
+            var bookingListResult = await _bookingRepository.GetAllAsync("Restaurant1");
+            if (bookingListResult.HasFailed)
+            {
+                homeModel.ErrorMessage = bookingListResult.Message;
+                return View(homeModel);
+            }
+
+            var seatingList = (List<SeatingModel>)seatingListResult.Content!;
+            homeModel.Seatings = seatingList!.Count;
+
+            var bookingList = (List<BookingEntity>)bookingListResult.Content!;
+            homeModel.Bookings = bookingList!.Count;
+
+
             return View(homeModel);
         }
 
