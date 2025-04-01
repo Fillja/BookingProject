@@ -1,0 +1,44 @@
+﻿@{
+
+}
+<section class="summary-section">
+
+    <div class="container">
+
+        <h1>Welcome @Model.RestaurantName!</h1>
+
+        <div class="content-wrapper">
+
+            <div class="content-container">
+
+                <div class="content-item">
+                    <h5><i class="fa-solid fa-users"></i>Current bookings</h5>
+                    <p>@Model.Bookings</p>
+                </div>
+
+                <div class="content-item">
+                    <h5><i class="fa-solid fa-chair"></i>Seatings</h5>
+                    <p>@Model.Seatings</p>
+                </div>
+
+            </div>
+
+            <div class="content-container">
+
+                <div class="content-item">
+                    <h5><i class="fa-solid fa-phone"></i>Call support</h5>
+                    <a class="link" href="tel:">+4670 12 34 56</a>
+                </div>
+
+                <div class="content-item">
+                    <h5><i class="fa-solid fa-envelope"></i>Mail support</h5>
+                    <a class="link" href="mailto:">support@domain.com</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

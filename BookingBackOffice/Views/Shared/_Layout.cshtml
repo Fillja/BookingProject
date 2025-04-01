@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BookingBackOffice</title>
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/46336025a2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div class="wrapper bg-dark">
+
+        @await (Html.PartialAsync("~/Views/Shared/Sections/_HeaderPartial.cshtml"))
+
+        <main>
+            @RenderBody()
+        </main>
+
+        @await(Html.PartialAsync("~/Views/Shared/Sections/_FooterPartial.cshtml"));
+
+    </div>
+
+    <script defer src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

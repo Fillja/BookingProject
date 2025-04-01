@@ -1,0 +1,5 @@
+﻿@model HomeViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+@await Html.PartialAsync("~/Views/Shared/Sections/HomeSections/_summarySection.cshtml", Model)
