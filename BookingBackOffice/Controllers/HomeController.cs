@@ -16,7 +16,7 @@ namespace BookingBackOffice.Controllers
         public async Task<IActionResult> Index()
         {
             var homeModel = new HomeViewModel();
-            homeModel.RestaurantName = "Restaurant1";
+            homeModel.RestaurantName = "Italli";
 
             var seatingListResult = await _seatingService.GetAllSeatingsAsync("Restaurant1");
             if (seatingListResult.HasFailed)
