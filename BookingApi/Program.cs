@@ -13,15 +13,11 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configura
 //DI Repositories
 builder.Services.AddScoped<RestaurantRepository>();
 builder.Services.AddScoped<TableRepository>();
-builder.Services.AddScoped<ChairRepository>();
-builder.Services.AddScoped<SeatingRepository>();
 builder.Services.AddScoped<BookingRepository>();
 
 
 //DI Services
-builder.Services.AddScoped<ChairService>();
 builder.Services.AddScoped<TableService>();
-builder.Services.AddScoped<SeatingService>();
 builder.Services.AddScoped<BookingService>();
 
 var app = builder.Build();

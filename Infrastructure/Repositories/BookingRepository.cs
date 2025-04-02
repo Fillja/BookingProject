@@ -16,8 +16,8 @@ public class BookingRepository(DataContext context) : BaseRepository<BookingEnti
         try
         {
             IEnumerable<BookingEntity> bookingList = await _context.Bookings
-                .Where(b => b.Seating!.Table.RestaurantId == restaurantId)
-                .Include(b => b.Seating)
+                .Where(b => b.Table!.RestaurantId == restaurantId)
+                .Include(b => b.Table)
                 .ToListAsync();
 
             if (!bookingList.Any())
@@ -37,7 +37,7 @@ public class BookingRepository(DataContext context) : BaseRepository<BookingEnti
         try
         {
             var bookingEntity = await _context.Bookings
-                .Include(b => b.Seating)
+                .Include(b => b.Table)
                 .FirstOrDefaultAsync(predicate);
 
             if (bookingEntity == null)

@@ -7,7 +7,5 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 {
     public DbSet<RestaurantEntity> Restaurants { get; set; }
     public DbSet<TableEntity> Tables { get; set; }
-    public DbSet<ChairEntity> Chairs { get; set; }
-    public DbSet<SeatingEntity> Seatings { get; set; }
     public DbSet<BookingEntity> Bookings { get; set; }
 }

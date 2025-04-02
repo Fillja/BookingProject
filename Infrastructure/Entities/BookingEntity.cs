@@ -13,10 +13,16 @@ public class BookingEntity
     public string BookerName { get; set; } = null!;
     public string BookerEmail { get; set; } = null!;
     public string BookerPhone { get; set; } = null!;
+    public int Vegan { get; set; }
+    public int Vegetarian { get; set; }
+    public int Lactose { get; set; }
+    public int Milk { get; set; }
+    public int Eggs { get; set; }
+    public int Gluten { get; set; }
     public string? SpecialRequests { get; set; }
 
-    public string SeatingId { get; set; } = null!;
+    public string TableId { get; set; } = null!;
 
-    [ForeignKey("SeatingId")]
-    public SeatingEntity? Seating { get; set; }
+    [ForeignKey("TableId")]
+    public TableEntity? Table { get; set; }
 }
