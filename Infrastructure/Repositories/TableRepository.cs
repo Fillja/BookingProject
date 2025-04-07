@@ -19,7 +19,7 @@ public class TableRepository(DataContext context) : BaseRepository<TableEntity>(
                 .Include(t => t.Bookings)
                 .ToListAsync();
 
-            if (!tableList.Any())
+            if (tableList.Count.Equals(0))
                 return ResponseResult.Result(2, "List is empty.");
 
             return ResponseResult.Result(0, "List was found.", tableList);

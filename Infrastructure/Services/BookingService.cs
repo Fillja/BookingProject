@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
-using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
@@ -9,25 +8,20 @@ namespace Infrastructure.Services;
 
 public class BookingService(BookingRepository bookingRepository, TableRepository tableRepository)
 {
-    //private readonly BookingRepository _bookingRepository = bookingRepository;
-    //private readonly TableRepository _tableRepository = tableRepository;
-    //private readonly ISeatingService _seatingService = seatingService;
+    private readonly BookingRepository _bookingRepository = bookingRepository;
+    private readonly TableRepository _tableRepository = tableRepository;
 
-    //public async Task<ResponseResult> CreateBookingAsync(BookingMinimalModel bookingMinimalModel, SeatingBookingModel seatingBookingModel)
-    //{
-    //    var getSeatingResult = await _seatingRepository.GetOneAsync(x => x.TableId == seatingBookingModel.TableId);
-    //    if (getSeatingResult.HasFailed)
-    //        return getSeatingResult;
+    public async Task<ResponseResult> CreateBookingAsync(BookingModel bookingModel)
+    {
+        var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == bookingModel.TableId);
+        if (getTableResult.HasFailed)
+            return getTableResult;
 
-    //    var bookingResult = await BookTableAndChairAsync(seatingBookingModel);
-    //    if (bookingResult.HasFailed)
-    //        return bookingResult;
+        var bookingEntity = EntityFactory.PopulateBookingEntity(bookingModel, (TableEntity)getTableResult.Content!);
+        var createResult = await _bookingRepository.CreateAsync(bookingEntity);
+        return createResult;
 
-    //    var bookingEntity = EntityFactory.PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingMinimalModel);
-    //    var createResult = await _bookingRepository.CreateAsync(bookingEntity);
-    //    return createResult;
-
-    //}
+    }
 
     //public async Task<ResponseResult> BookTableAndChairAsync(SeatingBookingModel seatingBookingModel)
     //{

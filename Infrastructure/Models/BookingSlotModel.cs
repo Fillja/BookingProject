@@ -1,5 +1,6 @@
 ﻿namespace Infrastructure.Models;
 
+//DTO in TableModel that references the BookingEntity
 public class BookingSlotModel
 {
     public string BookerName { get; set; } = null!;

@@ -46,16 +46,23 @@ public static class EntityFactory
     }
 
     //Used when creating a booking
-    public static BookingEntity PopulateBookingEntity(TableEntity tableEntity, BookingMinimalModel bookingMinimalModel)
+    public static BookingEntity PopulateBookingEntity(BookingModel bookingModel, TableEntity tableEntity)
     {
         return (new BookingEntity
         {
-            BookingStartTime = bookingMinimalModel.BookingStartTime,
-            BookingEndTime = bookingMinimalModel.BookingStartTime.AddHours(6),
-            BookerName = bookingMinimalModel.BookerName,
-            BookerEmail = bookingMinimalModel.BookerEmail,
-            BookerPhone = bookingMinimalModel.BookerPhone,
-            SpecialRequests = bookingMinimalModel.SpecialRequests,
+            CreatedDate = bookingModel.CreatedDate,
+            BookingStartTime = bookingModel.BookingStartTime,
+            BookingEndTime = bookingModel.BookingEndTime,
+            BookerName = bookingModel.BookerName,
+            BookerEmail = bookingModel.BookerEmail,
+            BookerPhone = bookingModel.BookerPhone,
+            Vegan = bookingModel.Vegan,
+            Vegetarian = bookingModel.Vegetarian,
+            Lactose = bookingModel.Lactose,
+            Milk = bookingModel.Milk,
+            Eggs = bookingModel.Eggs,
+            Gluten = bookingModel.Gluten,
+            SpecialRequests = bookingModel.SpecialRequests,
             TableId = tableEntity.Id,
             Table = tableEntity
         });
