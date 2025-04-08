@@ -1,4 +1,5 @@
 using Infrastructure.Contexts;
+using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,10 @@ builder.Services.AddScoped<BookingRepository>();
 
 
 //DI Services
-builder.Services.AddScoped<ChairService>();
-builder.Services.AddScoped<TableService>();
-builder.Services.AddScoped<SeatingService>();
-builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<IChairService, ChairService>();
+builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<ISeatingService, SeatingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 app.UseSwagger();
