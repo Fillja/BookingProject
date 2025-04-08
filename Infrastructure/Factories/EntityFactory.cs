@@ -5,6 +5,22 @@ namespace Infrastructure.Factories;
 
 public static class EntityFactory
 {
+    /* RESTAURANTS */
+
+    //Used when getting a restaurant or restaurants
+    public static RestaurantModel PopulateRestaurantModel(RestaurantEntity restaurantEntity)
+    {
+        return new RestaurantModel
+        {
+            Id = restaurantEntity.Id,
+            Name = restaurantEntity.Name,
+            Location = restaurantEntity.Location
+        };
+    }
+
+
+    /* TABLES */
+
     //Used when creating a table
     public static TableEntity PopulateTableEntity(RestaurantEntity restaurantEntity, TableModel tableModel)
     {
@@ -23,11 +39,13 @@ public static class EntityFactory
     {
         return new TableModel
         {
+            Id = tableEntity.Id,
             RestaurantId = tableEntity.RestaurantId,
             Name = tableEntity.Name,
             Size = tableEntity.Size,
             Bookings = tableEntity.Bookings?.Select(booking => new BookingSlotModel
             {
+                Id = booking.Id,
                 BookerName = booking.BookerName,
                 BookerEmail = booking.BookerEmail,
                 BookingStartTime = booking.BookingStartTime,
@@ -44,6 +62,9 @@ public static class EntityFactory
 
         return tableEntity;
     }
+
+
+    /* BOOKINGS */
 
     //Used when creating a booking
     public static BookingEntity PopulateBookingEntity(BookingModel bookingModel, TableEntity tableEntity)
@@ -68,32 +89,44 @@ public static class EntityFactory
         });
     }
 
-    //Used when updating a booking
-    public static BookingEntity PopulateBookingEntity(BookingEntity bookingEntity, BookingMinimalModel bookingMinimalModel) 
+    //Used when getting a booking or bookings
+    public static BookingModel PopulateBookingModel(BookingEntity bookingEntity)
     {
-        bookingEntity.BookingStartTime = bookingMinimalModel.BookingStartTime;
-        bookingEntity.BookingEndTime = bookingMinimalModel.BookingStartTime.AddHours(6);
-        bookingEntity.BookerName = bookingMinimalModel.BookerName;
-        bookingEntity.BookerEmail = bookingMinimalModel.BookerEmail;
-        bookingEntity.BookerPhone = bookingMinimalModel.BookerPhone;
-        bookingEntity.SpecialRequests = bookingMinimalModel.SpecialRequests;
-
-        return bookingEntity;
+        return new BookingModel
+        {
+            Id = bookingEntity.Id,
+            CreatedDate = bookingEntity.CreatedDate,
+            BookingStartTime = bookingEntity.BookingStartTime,
+            BookingEndTime = bookingEntity.BookingEndTime,
+            BookerName = bookingEntity.BookerName,
+            BookerEmail = bookingEntity.BookerEmail,
+            BookerPhone = bookingEntity.BookerPhone,
+            Vegan = bookingEntity.Vegan,
+            Vegetarian = bookingEntity.Vegetarian,
+            Lactose = bookingEntity.Lactose,
+            Milk = bookingEntity.Milk,
+            Eggs = bookingEntity.Eggs,
+            Gluten = bookingEntity.Gluten,
+            SpecialRequests = bookingEntity.SpecialRequests,
+            TableId = bookingEntity.TableId,
+        };
     }
 
-    //Used when return one complete booking
-    //public static BookingModel PopulateBookingModel(BookingEntity bookingEntity, SeatingModel seatingModel) 
-    //{
-    //    return new BookingModel
-    //    {
-    //        CreatedDate = bookingEntity.CreatedDate,
-    //        BookingStartTime = bookingEntity.BookingStartTime,
-    //        BookingEndTime = bookingEntity.BookingEndTime,
-    //        BookerName = bookingEntity.BookerName,
-    //        BookerEmail = bookingEntity.BookerEmail,
-    //        BookerPhone = bookingEntity.BookerPhone,
-    //        SpecialRequests = bookingEntity.SpecialRequests,
-    //        Seating = seatingModel
-    //    };
-    //}
+    //Used when updating a booking
+    public static BookingEntity PopulateBookingEntity(BookingEntity bookingEntity, BookingModel bookingModel)
+    {
+        bookingEntity.BookingStartTime = bookingModel.BookingStartTime;
+        bookingEntity.BookingEndTime = bookingModel.BookingEndTime;
+        bookingEntity.BookerName = bookingModel.BookerName;
+        bookingEntity.BookerEmail = bookingModel.BookerEmail;
+        bookingEntity.BookerPhone = bookingModel.BookerPhone;
+        bookingEntity.Vegan = bookingModel.Vegan;
+        bookingEntity.Vegetarian = bookingModel.Vegetarian;
+        bookingEntity.Lactose = bookingModel.Lactose;
+        bookingEntity.Milk = bookingModel.Milk;
+        bookingEntity.Eggs = bookingModel.Eggs;
+        bookingEntity.Gluten = bookingModel.Gluten;
+        bookingEntity.SpecialRequests = bookingModel.SpecialRequests;
+        return bookingEntity;
+    }
 }

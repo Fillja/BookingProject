@@ -24,20 +24,24 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
 
         var tableEntity = EntityFactory.PopulateTableEntity((RestaurantEntity)getRestaurantResult.Content!, tableModel);
         var createResult = await _tableRepository.CreateAsync(tableEntity);
-        return createResult;
+        if(createResult.HasFailed)
+            return createResult;
+
+        tableModel.Id = tableEntity.Id;
+        return ResponseResult.Result(0, createResult.Message!, tableModel);
 
     }
 
     public async Task<ResponseResult> GetAllTablesWithBookingsAsync(string restaurantId)
     {
-        var getResult = await _tableRepository.GetAllAsync(restaurantId);
-        if (getResult.HasFailed)
-            return getResult;
+        var listResult = await _tableRepository.GetAllAsync(restaurantId);
+        if (listResult.HasFailed)
+            return listResult;
 
-        var tableList = (IEnumerable<TableEntity>)getResult.Content!;
+        var tableList = (IEnumerable<TableEntity>)listResult.Content!;
         var tableModelList = tableList.Select(table => EntityFactory.PopulateTableModel(table)).ToList();
 
-        return ResponseResult.Result(0, "Tables fetched succesfully.", tableModelList);
+        return ResponseResult.Result(0, listResult.Message!, tableModelList);
     }
 
 
@@ -50,7 +54,7 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
         var tableEntity = (TableEntity)getResult.Content!;
         var tableModel = EntityFactory.PopulateTableModel(tableEntity);
 
-        return ResponseResult.Result(0, "Table fetched succesfully.", tableModel);
+        return ResponseResult.Result(0, getResult.Message!, tableModel);
     }
 
     public async Task<ResponseResult> UpdateTableAsync(string id, TableModel tableModel)
@@ -61,6 +65,10 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
 
         var entityToUpdate = EntityFactory.PopulateTableEntity((TableEntity)getResult.Content!, tableModel);
         var updateResult = await _tableRepository.UpdateAsync(entityToUpdate);
-        return updateResult;
+        if(updateResult.HasFailed)
+            return updateResult;
+        
+        var updatedTableModel = EntityFactory.PopulateTableModel((TableEntity)updateResult.Content!);
+        return ResponseResult.Result(0, updateResult.Message!, updatedTableModel);
     }
 }

@@ -2,6 +2,7 @@
 
 public class BookingModel
 {
+    public string? Id { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime BookingStartTime { get; set; }
     public DateTime BookingEndTime { get; set; }

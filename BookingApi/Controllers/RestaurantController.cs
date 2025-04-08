@@ -1,20 +1,18 @@
-﻿using Infrastructure.Models;
-using Infrastructure.Repositories;
-using Infrastructure.Services;
+﻿using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RestaurantController(RestaurantRepository restaurantRepository) : ControllerBase
+public class RestaurantController(RestaurantService restaurantService) : ControllerBase
 {
-    private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
+    private readonly RestaurantService _restaurantService = restaurantService;
 
     [HttpGet("getall")]
     public async Task<IActionResult> GetAll()
     {
-        var listResult = await _restaurantRepository.GetAllAsync();
+        var listResult = await _restaurantService.GetAllRestaurantsAsync();
 
         if (listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);
@@ -28,7 +26,7 @@ public class RestaurantController(RestaurantRepository restaurantRepository) : C
     [HttpGet("getone/{id}")]
     public async Task<IActionResult> GetOne(string id)
     {
-        var getResult = await _restaurantRepository.GetOneAsync(x => x.Id == id);
+        var getResult = await _restaurantService.GetOneRestaurantAsync(id);
 
         if (getResult.StatusCode.Equals(0))
             return Ok(getResult.Content);
