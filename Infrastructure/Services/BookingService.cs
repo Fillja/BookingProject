@@ -1,12 +1,13 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class BookingService(BookingRepository bookingRepository, TableRepository tableRepository, RestaurantRepository restaurantRepository)
+public class BookingService(BookingRepository bookingRepository, TableRepository tableRepository) : IBookingService
 {
     private readonly BookingRepository _bookingRepository = bookingRepository;
     private readonly TableRepository _tableRepository = tableRepository;
@@ -23,7 +24,7 @@ public class BookingService(BookingRepository bookingRepository, TableRepository
 
         var bookingEntity = EntityFactory.PopulateBookingEntity(bookingModel, (TableEntity)getTableResult.Content!);
         var createResult = await _bookingRepository.CreateAsync(bookingEntity);
-        if(createResult.HasFailed)
+        if (createResult.HasFailed)
             return createResult;
 
         bookingModel.Id = bookingEntity.Id;
@@ -63,40 +64,10 @@ public class BookingService(BookingRepository bookingRepository, TableRepository
 
         var entityToUpdate = EntityFactory.PopulateBookingEntity((BookingEntity)getResult.Content!, bookingModel);
         var updateResult = await _bookingRepository.UpdateAsync(entityToUpdate);
-        if(updateResult.HasFailed)
+        if (updateResult.HasFailed)
             return updateResult;
 
         var updatedBookingModel = EntityFactory.PopulateBookingModel((BookingEntity)updateResult.Content!);
         return ResponseResult.Result(0, updateResult.Message!, updatedBookingModel);
     }
-
-    //public async Task<ResponseResult> DeleteBookingAsync(string id)
-    //{
-    //    var getBookingResult = await GetOneBookingAsync(id);
-    //    var completeBooking = (BookingModel)getBookingResult.Content!;
-
-    //    TableEntity bookedTable = completeBooking.Seating.Table;
-    //    bookedTable.IsBooked = false;
-
-    //    var updateTableResult = await _tableRepository.UpdateAsync(bookedTable);
-    //    if (updateTableResult.HasFailed)
-    //        return updateTableResult;
-
-    //    List<ChairEntity> bookingChairs = completeBooking.Seating.Chairs;
-    //    foreach (var bookedChair in bookingChairs)
-    //    {
-    //        bookedChair.Vegetarian = false;
-    //        bookedChair.Vegan = false;
-    //        bookedChair.Eggs = false;
-    //        bookedChair.Gluten = false;
-    //        bookedChair.Milk = false;
-
-    //        var updateChairResult = await _chairRepository.UpdateAsync(bookedChair);
-    //        if (updateChairResult.HasFailed)
-    //            return updateChairResult;
-    //    }
-
-    //    var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == id);
-    //    return deleteResult;
-    //}
 }

@@ -1,13 +1,13 @@
-﻿using Infrastructure.Services;
+﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RestaurantController(RestaurantService restaurantService) : ControllerBase
+public class RestaurantController(IRestaurantService restaurantService) : ControllerBase
 {
-    private readonly RestaurantService _restaurantService = restaurantService;
+    private readonly IRestaurantService _restaurantService = restaurantService;
 
     [HttpGet("getall")]
     public async Task<IActionResult> GetAll()

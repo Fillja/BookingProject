@@ -1,16 +1,16 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Interfaces;
+using Infrastructure.Models;
 using Infrastructure.Repositories;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BookingController(BookingRepository bookingRepository, BookingService bookingService) : ControllerBase
+public class BookingController(BookingRepository bookingRepository, IBookingService bookingService) : ControllerBase
 {
     private readonly BookingRepository _bookingRepository = bookingRepository;
-    private readonly BookingService _bookingService = bookingService;
+    private readonly IBookingService _bookingService = bookingService;
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(BookingModel bookingModel)

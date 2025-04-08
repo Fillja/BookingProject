@@ -1,11 +1,12 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
+using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class RestaurantService(RestaurantRepository restaurantRepository)
+public class RestaurantService(RestaurantRepository restaurantRepository) : IRestaurantService
 {
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
 
@@ -18,7 +19,7 @@ public class RestaurantService(RestaurantRepository restaurantRepository)
         var restaurantList = (IEnumerable<RestaurantEntity>)listResult.Content!;
         var restaurantModelList = restaurantList.Select(restaurant => EntityFactory.PopulateRestaurantModel(restaurant));
 
-        return new ResponseResult{StatusCode = 0, Message = listResult.Message!, Content = restaurantModelList};
+        return new ResponseResult { StatusCode = 0, Message = listResult.Message!, Content = restaurantModelList };
     }
 
     public async Task<ResponseResult> GetOneRestaurantAsync(string restaurantId)

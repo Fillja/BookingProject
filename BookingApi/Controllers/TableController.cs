@@ -1,16 +1,16 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Interfaces;
+using Infrastructure.Models;
 using Infrastructure.Repositories;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TableController(TableRepository tableRepository, TableService tableService) : ControllerBase
+public class TableController(TableRepository tableRepository, ITableService tableService) : ControllerBase
 {
     private readonly TableRepository _tableRepository = tableRepository;
-    private readonly TableService _tableService = tableService;
+    private readonly ITableService _tableService = tableService;
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(TableModel model)

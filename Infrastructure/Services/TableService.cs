@@ -1,12 +1,13 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Factories;
 using Infrastructure.Helpers;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class TableService(TableRepository tableRepository, RestaurantRepository restaurantRepository)
+public class TableService(TableRepository tableRepository, RestaurantRepository restaurantRepository) : ITableService
 {
     private readonly TableRepository _tableRepository = tableRepository;
     private readonly RestaurantRepository _restaurantRepository = restaurantRepository;
@@ -24,7 +25,7 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
 
         var tableEntity = EntityFactory.PopulateTableEntity((RestaurantEntity)getRestaurantResult.Content!, tableModel);
         var createResult = await _tableRepository.CreateAsync(tableEntity);
-        if(createResult.HasFailed)
+        if (createResult.HasFailed)
             return createResult;
 
         tableModel.Id = tableEntity.Id;
@@ -65,9 +66,9 @@ public class TableService(TableRepository tableRepository, RestaurantRepository 
 
         var entityToUpdate = EntityFactory.PopulateTableEntity((TableEntity)getResult.Content!, tableModel);
         var updateResult = await _tableRepository.UpdateAsync(entityToUpdate);
-        if(updateResult.HasFailed)
+        if (updateResult.HasFailed)
             return updateResult;
-        
+
         var updatedTableModel = EntityFactory.PopulateTableModel((TableEntity)updateResult.Content!);
         return ResponseResult.Result(0, updateResult.Message!, updatedTableModel);
     }
