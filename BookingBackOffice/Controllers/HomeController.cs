@@ -1,4 +1,4 @@
-using BookingBackOffice.Models.Home;
+using BookingBackOffice.Models;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +13,16 @@ namespace BookingBackOffice.Controllers
         public async Task<IActionResult> Index()
         {
             var homeModel = new HomeViewModel();
-            homeModel.RestaurantName = "Michaelangelo";
+            homeModel.RestaurantName = "Italli";
 
-            var tableListResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant2");
+            var tableListResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant1");
             if (tableListResult.HasFailed)
             {
                 homeModel.ErrorMessage = tableListResult.Message;
                 return View(homeModel);
             }
 
-            var bookingListResult = await _bookingService.GetAllBookingsAsync("Restaurant2");
+            var bookingListResult = await _bookingService.GetAllBookingsAsync("Restaurant1");
             if (bookingListResult.HasFailed)
             {
                 homeModel.ErrorMessage = bookingListResult.Message;

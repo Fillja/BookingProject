@@ -17,4 +17,5 @@ public class BookingModel
     public int Gluten { get; set; }
     public string? SpecialRequests { get; set; }
     public string TableId { get; set; } = null!;
+    public string? TableName { get; set; }
 }

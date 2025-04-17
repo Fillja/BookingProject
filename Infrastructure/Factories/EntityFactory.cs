@@ -109,6 +109,7 @@ public static class EntityFactory
             Gluten = bookingEntity.Gluten,
             SpecialRequests = bookingEntity.SpecialRequests,
             TableId = bookingEntity.TableId,
+            TableName = bookingEntity.Table!.Name
         };
     }
 

@@ -1,4 +1,5 @@
 ﻿@model BookingViewModel
+@using System.Globalization
 @{
 }
 <section class="booking-section">
@@ -8,31 +9,78 @@
         <div class="list-container">
 
             <div class="booking-list">
+                <h2>Bookings</h2>
+                <div class="booking-list-header">
+                    <span>Table</span>
+                    <span>Name</span>
+                    <span>Email</span>
+                    <span>Phone</span>
+                    <span>Created</span>
+                    <span>Start</span>
+                    <span>End</span>
+                </div>
+
                 @foreach(var booking in Model.Bookings)
                 {
                     <div class="booking-list-item">
-                        <p>@booking.Id</p>
-                        <p>@booking.TableId</p>
-                        <p>@booking.BookerName</p>
-                        <p>@booking.BookerEmail</p>
-                        <p>@booking.BookerPhone</p>
-                        <p>@booking.CreatedDate</p>
-                        <p>@booking.BookingStartTime</p>
-                        <p>@booking.BookingEndTime</p>
-                        <p>@booking.Vegan</p>
-                        <p>@booking.Vegetarian</p>
-                        <p>@booking.Lactose</p>
-                        <p>@booking.Milk</p>
-                        <p>@booking.Eggs</p>
-                        <p>@booking.Gluten</p>
-                        <p>@booking.SpecialRequests</p>
+                        <span class="list-text">@booking.TableName</span>
+                        <span class="list-text">@booking.BookerName</span>
+                        <span class="list-text">@booking.BookerEmail</span>
+                        <span class="list-text">@booking.BookerPhone</span>
+                        <span class="date">@booking.CreatedDate</span>
+                        <span class="date">@booking.BookingStartTime</span>
+                        <span class="date">@booking.BookingEndTime</span>
                     </div>
                 }
 
             </div>
 
             <div class="table-list">
+                <h2>Tables</h2>
+                <div class="timeline-header">
+                    @for (int hour = 9; hour <= 22; hour++)  // Example: 09:00 to 22:00
+                    {
+                        <span>@hour:00</span>
+                    }
+                </div>
+                @foreach(var table in Model.Tables)
+                {
+                    <div class="table-list-item">
+                        <span class="table-name">@table.Name</span>
 
+                        <div class="booking-timeline">
+
+                            @for (int i = 1; i < 13; i++) // Don't draw at 0%, just 1h–13h (14 columns)
+                            {
+                                var left = (i / 13.0) * 100;
+                                <div class="time-divider" style="left:@left.ToString(CultureInfo.InvariantCulture)%"></div>
+                            }
+
+                            @foreach (var booking in table.Bookings)
+                            {
+                                var startMinutes = booking.BookingStartTime.TimeOfDay.TotalMinutes;
+                                var endMinutes = booking.BookingEndTime.TimeOfDay.TotalMinutes;
+
+                                var timelineStart = 540.0; // 09:00 in minutes
+                                var timelineEnd = 1320.0;  // 22:00 in minutes
+                                var timelineDuration = timelineEnd - timelineStart;
+
+                                // Clamp values within range
+                                var clampedStart = Math.Max(startMinutes, timelineStart);
+                                var clampedEnd = Math.Min(endMinutes, timelineEnd);
+
+                                var startPercent = ((clampedStart - timelineStart) / timelineDuration) * 100;
+                                var widthPercent = ((clampedEnd - clampedStart) / timelineDuration) * 100;
+
+                                <div class="booking-block"
+                                     style="left:@startPercent.ToString(CultureInfo.InvariantCulture)%; width:@widthPercent.ToString(CultureInfo.InvariantCulture)%;">
+                                    @booking.BookerName
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                }
             </div>
 
         </div>

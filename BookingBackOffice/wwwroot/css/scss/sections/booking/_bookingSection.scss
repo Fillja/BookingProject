@@ -1,0 +1,118 @@
+﻿.booking-section {
+
+    .container {
+        h1 {
+            margin-bottom: 3rem;
+        }
+
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5rem;
+
+            .booking-list {
+
+                .booking-list-header {
+                    display: grid;
+                    grid-template-columns: .8fr // Table
+                    1.5fr // Name
+                    2fr // Email
+                    1fr // Phone
+                    1.2fr // Created
+                    1.2fr // Start
+                    1.2fr; // End
+                    font-weight: bold;
+                    background: var(--color-coal);
+                    padding: 1rem;
+                    border-radius: 0.5rem;
+                    margin-bottom: 1rem;
+                    font-size: 0.9rem;
+                }
+
+                .booking-list-item {
+                    display: grid;
+                    grid-template-columns: .8fr // Table
+                    1.5fr // Name
+                    2fr // Email
+                    1fr // Phone
+                    1.2fr // Created
+                    1.2fr // Start
+                    1.2fr; // End
+                    gap: 1rem;
+                    background: var(--color-coal);
+                    border: 1px solid var(--color-light);
+                    border-radius: 0.5rem;
+                    padding: 1rem;
+                    margin-bottom: 1rem;
+                    font-size: 0.8rem;
+
+                    .span {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+
+            .table-list {
+
+                .timeline-header {
+                    display: grid;
+                    grid-template-columns: repeat(14, 1fr); // 09:00 to 22:00 (14 hours)
+                    font-size: 0.8rem;
+                    padding-left: 8rem; // Account for table name column
+                    margin-bottom: 0.5rem;
+
+                    span {
+                        //text-align: center;
+                    }
+                }
+
+                .table-list-item {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 1rem;
+
+                    .table-name {
+                        width: 8rem;
+                        font-weight: bold;
+                    }
+
+                    .booking-timeline {
+                        position: relative;
+                        flex-grow: 1;
+                        height: 2.5rem;
+                        background-color: var(--color-coal);
+                        border-radius: 0.5rem;
+                        overflow: hidden;
+
+                        .time-divider {
+                            position: absolute;
+                            top: 0;
+                            bottom: 0;
+                            width: 1px;
+                            background-color: rgba(255, 255, 255, 0.1); // subtle white line
+                        }
+
+
+                        .booking-block {
+                            position: absolute;
+                            top: 0;
+                            bottom: 0;
+                            background-color: var(--color-success);
+                            font-size: 0.75rem;
+                            padding: .5rem; // Only vertical space if needed
+                            box-sizing: border-box; // Ensure padding doesn't increase size
+                            border-radius: 0.3rem;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
