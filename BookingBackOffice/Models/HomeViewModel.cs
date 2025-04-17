@@ -1,4 +1,4 @@
-﻿namespace BookingBackOffice.Models.Home;
+﻿namespace BookingBackOffice.Models;
 
 public class HomeViewModel
 {

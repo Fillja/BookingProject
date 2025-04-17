@@ -1,0 +1,41 @@
+﻿@model BookingViewModel
+@{
+}
+<section class="booking-section">
+
+    <div class="container">
+        <h1>Your bookings</h1>
+        <div class="list-container">
+
+            <div class="booking-list">
+                @foreach(var booking in Model.Bookings)
+                {
+                    <div class="booking-list-item">
+                        <p>@booking.Id</p>
+                        <p>@booking.TableId</p>
+                        <p>@booking.BookerName</p>
+                        <p>@booking.BookerEmail</p>
+                        <p>@booking.BookerPhone</p>
+                        <p>@booking.CreatedDate</p>
+                        <p>@booking.BookingStartTime</p>
+                        <p>@booking.BookingEndTime</p>
+                        <p>@booking.Vegan</p>
+                        <p>@booking.Vegetarian</p>
+                        <p>@booking.Lactose</p>
+                        <p>@booking.Milk</p>
+                        <p>@booking.Eggs</p>
+                        <p>@booking.Gluten</p>
+                        <p>@booking.SpecialRequests</p>
+                    </div>
+                }
+
+            </div>
+
+            <div class="table-list">
+
+            </div>
+
+        </div>
+    </div>
+
+</section>

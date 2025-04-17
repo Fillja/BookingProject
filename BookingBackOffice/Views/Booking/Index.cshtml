@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BookingViewModel
+@{
+    ViewData["Title"] = Model.Title;
 }
-
-<h1>BOOKING INDEX</h1>
+@await Html.PartialAsync("~/Views/Shared/Sections/BookingSections/_bookingSection.cshtml");
