@@ -9,10 +9,8 @@
 
         <nav class="link-container tablet-hidden">
             <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Home" ? "active-link" : "")" asp-controller="Home" asp-action="Index">Home</a>
-            <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Bookings" ? "active-link" : "")" asp-controller="Booking" asp-action="Index">Bookings</a>
-            <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Seatings" ? "active-link" : "")" asp-controller="Seatings" asp-action="Index">Seatings</a>
-            <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Tables" ? "active-link" : "")" asp-controller="Tables" asp-action="Index">Tables</a>
-            <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Chairs" ? "active-link" : "")" asp-controller="Chairs" asp-action="Index">Chairs</a>
+            <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Booking" ? "active-link" : "")" asp-controller="Booking" asp-action="Index">Bookings</a>
+            <a class="link @(ViewContext.RouteData.Values["controller"]!.ToString() == "Table" ? "active-link" : "")" asp-controller="Table" asp-action="Index">Tables</a>
         </nav>
 
         <div class="account-container">

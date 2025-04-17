@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250402125956_RefactoredEverything&RemovedChair&Seating")]
+    partial class RefactoredEverythingRemovedChairSeating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,30 +51,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Eggs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Gluten")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Lactose")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Milk")
-                        .HasColumnType("int");
-
                     b.Property<string>("SpecialRequests")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TableId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Vegan")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Vegetarian")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -103,6 +88,18 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Eggs")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Gluten")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsBooked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Milk")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -111,6 +108,12 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Vegan")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Vegetarian")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

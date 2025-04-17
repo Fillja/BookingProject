@@ -39,7 +39,7 @@
   color: var(--color-light);
 }
 .bg-dark .link:hover {
-  color: var(--color-theme);
+  color: var(--color-secondary);
 }
 
 .bg-coal {
@@ -50,7 +50,7 @@
   color: var(--color-light);
 }
 .bg-coal .link:hover {
-  color: var(--color-theme);
+  color: var(--color-secondary);
 }
 
 html, body, section, div, header, footer, main, aside, nav, blockquote, p, span, h1, h2, h3, h4, h5, h6, ul, li {
@@ -126,7 +126,7 @@ section {
 }
 .icon-wrapper i:hover {
   color: var(--color-dark);
-  background-color: var(--color-theme);
+  background-color: var(--color-secondary);
 }
 
 .content-container {
@@ -172,7 +172,7 @@ section {
   transition: all 0.25s ease-in-out;
 }
 .link:hover {
-  color: var(--color-theme);
+  color: var(--color-secondary);
   text-decoration: underline;
 }
 .link i {
@@ -181,7 +181,7 @@ section {
 }
 
 .active-link {
-  color: var(--color-theme) !important;
+  color: var(--color-secondary) !important;
   text-decoration: underline;
 }
 

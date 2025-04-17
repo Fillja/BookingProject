@@ -1,41 +1,38 @@
 using BookingBackOffice.Models.Home;
-using Infrastructure.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
-using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers
 {
-    public class HomeController(IBookingService bookingService, ISeatingService seatingService, BookingRepository bookingRepository) : Controller
+    public class HomeController(IBookingService bookingService, ITableService tableService) : Controller
     {
         private readonly IBookingService _bookingService = bookingService;
-        private readonly ISeatingService _seatingService = seatingService;
-        private readonly BookingRepository _bookingRepository = bookingRepository;
+        private readonly ITableService _tableService = tableService;
 
         public async Task<IActionResult> Index()
         {
             var homeModel = new HomeViewModel();
-            homeModel.RestaurantName = "Italli";
+            homeModel.RestaurantName = "Michaelangelo";
 
-            var seatingListResult = await _seatingService.GetAllSeatingsAsync("Restaurant1");
-            if (seatingListResult.HasFailed)
+            var tableListResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant2");
+            if (tableListResult.HasFailed)
             {
-                homeModel.ErrorMessage = seatingListResult.Message;
+                homeModel.ErrorMessage = tableListResult.Message;
                 return View(homeModel);
             }
 
-            var bookingListResult = await _bookingRepository.GetAllAsync("Restaurant1");
+            var bookingListResult = await _bookingService.GetAllBookingsAsync("Restaurant2");
             if (bookingListResult.HasFailed)
             {
                 homeModel.ErrorMessage = bookingListResult.Message;
                 return View(homeModel);
             }
 
-            var seatingList = (List<SeatingModel>)seatingListResult.Content!;
-            homeModel.Seatings = seatingList!.Count;
+            var tableList = (List<TableModel>)tableListResult.Content!;
+            homeModel.Tables = tableList!.Count;
 
-            var bookingList = (List<BookingEntity>)bookingListResult.Content!;
+            var bookingList = (List<BookingModel>)bookingListResult.Content!;
             homeModel.Bookings = bookingList!.Count;
 
 

@@ -1,16 +1,16 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Interfaces;
+using Infrastructure.Models;
 using Infrastructure.Repositories;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TableController(TableRepository tableRepository, TableService tableService) : ControllerBase
+public class TableController(TableRepository tableRepository, ITableService tableService) : ControllerBase
 {
     private readonly TableRepository _tableRepository = tableRepository;
-    private readonly TableService _tableService = tableService;
+    private readonly ITableService _tableService = tableService;
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(TableModel model)
@@ -34,7 +34,7 @@ public class TableController(TableRepository tableRepository, TableService table
     [HttpGet("getall/{restaurantId}")]
     public async Task<IActionResult> GetAll(string restaurantId)
     {
-        var listResult = await _tableRepository.GetAllAsync(restaurantId);
+        var listResult = await _tableService.GetAllTablesWithBookingsAsync(restaurantId);
 
         if (listResult.StatusCode.Equals(0))
             return Ok(listResult.Content);
@@ -46,9 +46,9 @@ public class TableController(TableRepository tableRepository, TableService table
     }
 
     [HttpGet("getone/{id}")]
-    public async Task<IActionResult> GetOne(string id)
+    public async Task<IActionResult> GetTableAsync(string id)
     {
-        var getResult = await _tableRepository.GetOneAsync(x => x.Id == id);
+        var getResult = await _tableService.GetTableAsync(id);
 
         if (getResult.StatusCode.Equals(0))
             return Ok(getResult.Content);

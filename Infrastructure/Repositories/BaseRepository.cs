@@ -116,6 +116,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
+    //Deletes a supplied entity
     public virtual async Task<ResponseResult> DeleteAsync(TEntity entity)
     {
         try
@@ -131,6 +132,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
+    //Deletes an entity based on a predicate 
     public virtual async Task<ResponseResult> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {
         try

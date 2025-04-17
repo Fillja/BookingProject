@@ -7,116 +7,67 @@ using Infrastructure.Repositories;
 
 namespace Infrastructure.Services;
 
-public class BookingService(BookingRepository bookingRepository, SeatingRepository seatingRepository, ChairRepository chairRepository, TableRepository tableRepository, ISeatingService seatingService) : IBookingService
+public class BookingService(BookingRepository bookingRepository, TableRepository tableRepository) : IBookingService
 {
     private readonly BookingRepository _bookingRepository = bookingRepository;
-    private readonly SeatingRepository _seatingRepository = seatingRepository;
-    private readonly ChairRepository _chairRepository = chairRepository;
     private readonly TableRepository _tableRepository = tableRepository;
-    private readonly ISeatingService _seatingService = seatingService;
 
-    public async Task<ResponseResult> CreateBookingAsync(BookingMinimalModel bookingMinimalModel, SeatingBookingModel seatingBookingModel)
+    public async Task<ResponseResult> CreateBookingAsync(BookingModel bookingModel)
     {
-        var getSeatingResult = await _seatingRepository.GetOneAsync(x => x.TableId == seatingBookingModel.TableId);
-        if (getSeatingResult.HasFailed)
-            return getSeatingResult;
-
-        var bookingResult = await BookTableAndChairAsync(seatingBookingModel);
-        if (bookingResult.HasFailed)
-            return bookingResult;
-
-        var bookingEntity = EntityFactory.PopulateBookingEntity((SeatingEntity)getSeatingResult.Content!, bookingMinimalModel);
-        var createResult = await _bookingRepository.CreateAsync(bookingEntity);
-        return createResult;
-
-    }
-
-    public async Task<ResponseResult> BookTableAndChairAsync(SeatingBookingModel seatingBookingModel)
-    {
-        var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == seatingBookingModel.TableId);
+        var getTableResult = await _tableRepository.GetOneAsync(x => x.Id == bookingModel.TableId);
         if (getTableResult.HasFailed)
             return getTableResult;
 
-        foreach (var chair in seatingBookingModel.Chairs)
-        {
-            var getChairResult = await _chairRepository.GetOneAsync(x => x.Id == chair.ChairId);
-            if (getChairResult.HasFailed)
-                return getChairResult;
-
-            var chairEntity = EntityFactory.PopulateChairEntity((ChairEntity)getChairResult.Content!, chair);
-
-            var updateResult = await _chairRepository.UpdateAsync(chairEntity);
-            if (updateResult.HasFailed)
-                return updateResult;
-        }
-
         var tableEntity = (TableEntity)getTableResult.Content!;
-        tableEntity.IsBooked = true;
+        if (tableEntity.IsBookedAt(bookingModel.BookingStartTime, bookingModel.BookingEndTime))
+            return ResponseResult.Result(3, "Table is already booked for the selected time.");
 
-        var updateTableResult = await _tableRepository.UpdateAsync(tableEntity);
-        if (updateTableResult.HasFailed)
-            return updateTableResult;
+        var bookingEntity = EntityFactory.PopulateBookingEntity(bookingModel, (TableEntity)getTableResult.Content!);
+        var createResult = await _bookingRepository.CreateAsync(bookingEntity);
+        if (createResult.HasFailed)
+            return createResult;
 
-        return ResponseResult.Result(0);
+        bookingModel.Id = bookingEntity.Id;
+        return ResponseResult.Result(0, createResult.Message!, bookingModel);
+
     }
 
-    public async Task<ResponseResult> GetOneBookingAsync(string id)
+    public async Task<ResponseResult> GetAllBookingsAsync(string restaurantId)
     {
-        var getBookingResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
-        if (getBookingResult.HasFailed)
-            return getBookingResult;
+        var listResult = await _bookingRepository.GetAllAsync(restaurantId);
+        if (listResult.HasFailed)
+            return listResult;
 
-        var bookingEntity = (BookingEntity)getBookingResult.Content!;
+        var bookingList = (IEnumerable<BookingEntity>)listResult.Content!;
+        var bookingModelList = bookingList.Select(booking => EntityFactory.PopulateBookingModel(booking)).ToList();
 
-        var getSeatingResult = await _seatingService.GetOneSeatingAsync(bookingEntity.Seating!.TableId);
-        if (getSeatingResult.HasFailed)
-            return getSeatingResult;
-
-        var seatingModel = (SeatingModel)getSeatingResult.Content!;
-
-        var completeBooking = EntityFactory.PopulateBookingModel(bookingEntity, seatingModel);
-
-        return ResponseResult.Result(0, "", completeBooking);
+        return ResponseResult.Result(0, listResult.Message!, bookingModelList);
     }
 
-    public async Task<ResponseResult> UpdateBookingAsync(string id, BookingMinimalModel bookingMinimalModel)
+    public async Task<ResponseResult> GetBookingAsync(string id)
     {
         var getResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
         if (getResult.HasFailed)
             return getResult;
 
-        var entityToUpdate = EntityFactory.PopulateBookingEntity((BookingEntity)getResult.Content!, bookingMinimalModel);
-        var updateResult = await _bookingRepository.UpdateAsync(entityToUpdate);
-        return updateResult;
+        var bookingEntity = (BookingEntity)getResult.Content!;
+        var bookingModel = EntityFactory.PopulateBookingModel(bookingEntity);
+
+        return ResponseResult.Result(0, getResult.Message!, bookingModel);
     }
 
-    public async Task<ResponseResult> DeleteBookingAsync(string id)
+    public async Task<ResponseResult> UpdateBookingAsync(string id, BookingModel bookingModel)
     {
-        var getBookingResult = await GetOneBookingAsync(id);
-        var completeBooking = (BookingModel)getBookingResult.Content!;
+        var getResult = await _bookingRepository.GetOneAsync(x => x.Id == id);
+        if (getResult.HasFailed)
+            return getResult;
 
-        TableEntity bookedTable = completeBooking.Seating.Table;
-        bookedTable.IsBooked = false;
+        var entityToUpdate = EntityFactory.PopulateBookingEntity((BookingEntity)getResult.Content!, bookingModel);
+        var updateResult = await _bookingRepository.UpdateAsync(entityToUpdate);
+        if (updateResult.HasFailed)
+            return updateResult;
 
-        var updateTableResult = await _tableRepository.UpdateAsync(bookedTable);
-        if (updateTableResult.HasFailed)
-            return updateTableResult;
-
-        List<ChairEntity> bookingChairs = completeBooking.Seating.Chairs;
-        foreach (var bookedChair in bookingChairs)
-        {
-            bookedChair.Vegetarian = false;
-            bookedChair.Vegan = false;
-            bookedChair.Eggs = false;
-            bookedChair.Gluten = false;
-            bookedChair.Milk = false;
-
-            var updateChairResult = await _chairRepository.UpdateAsync(bookedChair);
-            if (updateChairResult.HasFailed)
-                return updateChairResult;
-        }
-
-        var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == id);
-        return deleteResult;
+        var updatedBookingModel = EntityFactory.PopulateBookingModel((BookingEntity)updateResult.Content!);
+        return ResponseResult.Result(0, updateResult.Message!, updatedBookingModel);
     }
 }

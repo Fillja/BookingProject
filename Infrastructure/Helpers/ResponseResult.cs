@@ -17,7 +17,7 @@ public class ResponseResult
     {
         return new ResponseResult
         {
-            Content = obj ?? "",
+            Content = obj ?? null,
             Message = message ?? "Succeeded.",
             StatusCode = statusCode,
             HasFailed = statusCode > 0
