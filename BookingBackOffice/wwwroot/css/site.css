@@ -96,6 +96,11 @@ section {
   padding: 4rem 0;
 }
 
+.hidden {
+  visibility: hidden !important;
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   .mobile-hidden {
     visibility: hidden !important;
@@ -244,6 +249,21 @@ section {
   color: var(--color-dark);
 }
 
+.btn-square {
+  background-color: var(--color-secondary);
+  color: var(--color-dark);
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 3px;
+  border: none;
+  padding: 5px;
+  transition: all 0.25s ease-in-out;
+  text-decoration: none;
+}
+.btn-square:hover {
+  background-color: var(--color-light);
+}
+
 html, body {
   color: var(--color-dark);
   font-family: "Inter", sans-serif;
@@ -348,17 +368,14 @@ footer .container .link-container {
   }
 }
 
-.booking-section .container h1 {
-  margin-bottom: 3rem;
-}
-.booking-section .container .list-container {
+.booking-section .container {
   display: flex;
   flex-direction: column;
   gap: 5rem;
 }
-.booking-section .container .list-container .booking-list .booking-list-header {
+.booking-section .container .booking-list .booking-list-header {
   display: grid;
-  grid-template-columns: 0.8fr 1.5fr 2fr 1fr 1.2fr 1.2fr 1.2fr;
+  grid-template-columns: 0.8fr 1.5fr 1.9fr 1fr 1.2fr 1.2fr 1.2fr;
   font-weight: bold;
   background: var(--color-coal);
   padding: 1rem;
@@ -366,7 +383,13 @@ footer .container .link-container {
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
-.booking-section .container .list-container .booking-list .booking-list-item {
+.booking-section .container .booking-list .booking-list-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: start;
+}
+.booking-section .container .booking-list .booking-list-item .booking-summary {
   display: grid;
   grid-template-columns: 0.8fr 1.5fr 2fr 1fr 1.2fr 1.2fr 1.2fr;
   gap: 1rem;
@@ -374,31 +397,56 @@ footer .container .link-container {
   border: 1px solid var(--color-light);
   border-radius: 0.5rem;
   padding: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   font-size: 0.8rem;
 }
-.booking-section .container .list-container .booking-list .booking-list-item .span {
+.booking-section .container .booking-list .booking-list-item .booking-summary .span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.booking-section .container .list-container .table-list .timeline-header {
+.booking-section .container .booking-list .booking-list-item .dropdown-button {
+  margin-top: 0.5rem;
+}
+.booking-section .container .booking-list .booking-list-item .booking-dropdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  background-color: var(--color-coal);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 30px;
+  border: solid 1px var(--color-light);
+}
+.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content {
+  display: flex;
+  flex-direction: column;
+}
+.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content .btn {
+  margin-top: 4rem;
+}
+.booking-section .container .table-list .timeline-header {
   display: grid;
   grid-template-columns: repeat(14, 1fr);
   font-size: 0.8rem;
   padding-left: 8rem;
   margin-bottom: 0.5rem;
 }
-.booking-section .container .list-container .table-list .table-list-item {
+.booking-section .container .table-list .table-list-item {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
 }
-.booking-section .container .list-container .table-list .table-list-item .table-name {
+.booking-section .container .table-list .table-list-item .table-name {
   width: 8rem;
   font-weight: bold;
 }
-.booking-section .container .list-container .table-list .table-list-item .booking-timeline {
+.booking-section .container .table-list .table-list-item .booking-timeline {
   position: relative;
   flex-grow: 1;
   height: 2.5rem;
@@ -406,14 +454,14 @@ footer .container .link-container {
   border-radius: 0.5rem;
   overflow: hidden;
 }
-.booking-section .container .list-container .table-list .table-list-item .booking-timeline .time-divider {
+.booking-section .container .table-list .table-list-item .booking-timeline .time-divider {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 1px;
   background-color: rgba(255, 255, 255, 0.1);
 }
-.booking-section .container .list-container .table-list .table-list-item .booking-timeline .booking-block {
+.booking-section .container .table-list .table-list-item .booking-timeline .booking-block {
   position: absolute;
   top: 0;
   bottom: 0;

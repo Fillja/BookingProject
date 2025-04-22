@@ -1,35 +1,37 @@
 ﻿.booking-section {
 
     .container {
-        h1 {
-            margin-bottom: 3rem;
-        }
+        display: flex;
+        flex-direction: column;
+        gap: 5rem;
 
-        .list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5rem;
 
-            .booking-list {
+        .booking-list {
 
-                .booking-list-header {
-                    display: grid;
-                    grid-template-columns: .8fr // Table
-                    1.5fr // Name
-                    2fr // Email
-                    1fr // Phone
-                    1.2fr // Created
-                    1.2fr // Start
-                    1.2fr; // End
-                    font-weight: bold;
-                    background: var(--color-coal);
-                    padding: 1rem;
-                    border-radius: 0.5rem;
-                    margin-bottom: 1rem;
-                    font-size: 0.9rem;
-                }
+            .booking-list-header {
+                display: grid;
+                grid-template-columns: .8fr // Table
+                1.5fr // Name
+                1.9fr // Email
+                1fr // Phone
+                1.2fr // Created
+                1.2fr // Start
+                1.2fr; // End
+                font-weight: bold;
+                background: var(--color-coal);
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
 
-                .booking-list-item {
+            .booking-list-item {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: .5rem;
+                align-items: start;
+
+                .booking-summary {
                     display: grid;
                     grid-template-columns: .8fr // Table
                     1.5fr // Name
@@ -43,7 +45,7 @@
                     border: 1px solid var(--color-light);
                     border-radius: 0.5rem;
                     padding: 1rem;
-                    margin-bottom: 1rem;
+                    margin-bottom: 2rem;
                     font-size: 0.8rem;
 
                     .span {
@@ -52,64 +54,90 @@
                         text-overflow: ellipsis;
                     }
                 }
-            }
 
-            .table-list {
-
-                .timeline-header {
-                    display: grid;
-                    grid-template-columns: repeat(14, 1fr); // 09:00 to 22:00 (14 hours)
-                    font-size: 0.8rem;
-                    padding-left: 8rem; // Account for table name column
-                    margin-bottom: 0.5rem;
-
-                    span {
-                        //text-align: center;
-                    }
+                .dropdown-button {
+                    margin-top: .5rem;
                 }
 
-                .table-list-item {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 1rem;
+                .booking-dropdown {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 2rem;
+                    background-color: var(--color-coal);
+                    padding: 2rem;
+                    margin-bottom: 2rem;
+                    border-radius: 30px;
+                    border: solid 1px var(--color-light);
 
-                    .table-name {
-                        width: 8rem;
-                        font-weight: bold;
-                    }
+                    .dropdown-content {
+                        display: flex;
+                        flex-direction: column;
 
-                    .booking-timeline {
-                        position: relative;
-                        flex-grow: 1;
-                        height: 2.5rem;
-                        background-color: var(--color-coal);
-                        border-radius: 0.5rem;
-                        overflow: hidden;
-
-                        .time-divider {
-                            position: absolute;
-                            top: 0;
-                            bottom: 0;
-                            width: 1px;
-                            background-color: rgba(255, 255, 255, 0.1); // subtle white line
-                        }
-
-
-                        .booking-block {
-                            position: absolute;
-                            top: 0;
-                            bottom: 0;
-                            background-color: var(--color-success);
-                            font-size: 0.75rem;
-                            padding: .5rem; // Only vertical space if needed
-                            box-sizing: border-box; // Ensure padding doesn't increase size
-                            border-radius: 0.3rem;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
+                        .dropdown-item {
                             display: flex;
                             align-items: center;
+                            gap: .5rem;
                         }
+
+                        .btn{
+                            margin-top: 4rem;
+                        }
+                    }
+                }
+            }
+        }
+
+        .table-list {
+
+            .timeline-header {
+                display: grid;
+                grid-template-columns: repeat(14, 1fr); // Tidtabell - 09:00 till 22:00 (14 timmar)
+                font-size: 0.8rem;
+                padding-left: 8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .table-list-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+
+                .table-name {
+                    width: 8rem;
+                    font-weight: bold;
+                }
+
+                .booking-timeline {
+                    position: relative;
+                    flex-grow: 1;
+                    height: 2.5rem;
+                    background-color: var(--color-coal);
+                    border-radius: 0.5rem;
+                    overflow: hidden;
+
+                    .time-divider {
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        width: 1px;
+                        background-color: rgba(255, 255, 255, 0.1);
+                    }
+
+
+                    .booking-block {
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        background-color: var(--color-success);
+                        font-size: 0.75rem;
+                        padding: .5rem;
+                        box-sizing: border-box;
+                        border-radius: 0.3rem;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: flex;
+                        align-items: center;
                     }
                 }
             }

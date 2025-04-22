@@ -39,6 +39,11 @@ section{
     padding: 4rem 0;
 }
 
+.hidden {
+    visibility: hidden !important;
+    display: none !important;
+}
+
 .mobile-hidden {
     @media(max-width: 768px) {
         visibility: hidden !important;

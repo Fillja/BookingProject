@@ -86,3 +86,19 @@
         color: var(--color-dark);
     }
 }
+
+.btn-square {
+    background-color: var(--color-secondary);
+    color: var(--color-dark);
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 3px;
+    border: none;
+    padding: 5px;
+    transition: all 0.25s ease-in-out;
+    text-decoration: none;
+
+    &:hover {
+        background-color: var(--color-light);
+    }
+}
