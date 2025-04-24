@@ -1,13 +1,21 @@
-﻿namespace Infrastructure.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Infrastructure.Models;
 
 public class BookingModel
 {
     public string? Id { get; set; }
+    [Required]
     public DateTime CreatedDate { get; set; }
+    [Required]
     public DateTime BookingStartTime { get; set; }
+    [Required]
     public DateTime BookingEndTime { get; set; }
+    [Required]
     public string BookerName { get; set; } = null!;
+    [Required]
     public string BookerEmail { get; set; } = null!;
+    [Required]
     public string BookerPhone { get; set; } = null!;
     public int Vegan { get; set; }
     public int Vegetarian { get; set; }

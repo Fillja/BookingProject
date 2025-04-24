@@ -1,14 +1,16 @@
 ﻿using BookingBackOffice.Models;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers;
 
-public class BookingController(IBookingService bookingService, ITableService tableService) : Controller
+public class BookingController(IBookingService bookingService, ITableService tableService, BookingRepository bookingRepository) : Controller
 {
     private readonly IBookingService _bookingService = bookingService;
     private readonly ITableService _tableService = tableService;
+    private readonly BookingRepository _bookingRepository = bookingRepository;
 
     public async Task<IActionResult> Index()
     {
@@ -35,5 +37,29 @@ public class BookingController(IBookingService bookingService, ITableService tab
         bookingModel.Bookings = bookingList;
 
         return View(bookingModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditBooking(BookingModel model, string action)
+    {
+        TempData["DisplayMessage"] = "You must fill out all the necessary fields!";
+
+        if (ModelState.IsValid) 
+        {
+            if (action == "update")
+            {
+                var updateResult = await _bookingService.UpdateBookingAsync(model.Id!, model);
+                TempData["DisplayMessage"] = updateResult.Message;
+            }
+            else if (action == "delete")
+            {
+                var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == model.Id);
+                TempData["DisplayMessage"] = deleteResult.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        return RedirectToAction("Index");
     }
 }

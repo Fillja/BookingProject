@@ -38,72 +38,94 @@
                         <span class="date">@booking.BookingEndTime</span>
                     </div>
                     <button onclick="openDropdown(@listId)" class="btn-square dropdown-button"><i class="fa-solid fa-caret-down"></i></button>
-  
 
-                    <div id="dropdown-@listId" class="booking-dropdown hidden">
+                    <form method="post" asp-controller="Booking" asp-action="EditBooking">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Id" value="@booking.Id" />
 
-                        <div class="dropdown-content">
+                        <div id="dropdown-@listId" class="booking-dropdown hidden">
 
-                            <h4>Booker</h4>
-                            <div class="dropdown-item">
-                                <h6>Name: </h6><span class="list-text">@booking.BookerName</span>
+                            <!-- BOOKER -->
+                            <div class="dropdown-content">
+                                <h4>Booker</h4>
+                                <div class="dropdown-item">
+                                    <label for="BookerName">Name:</label>
+                                    <input type="text" name="BookerName" id="BookerName" class="input-text" value="@booking.BookerName" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="BookerEmail">Email:</label>
+                                    <input type="email" name="BookerEmail" id="BookerEmail" class="input-text" value="@booking.BookerEmail" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="BookerPhone">Phone:</label>
+                                    <input type="tel" name="BookerPhone" id="BookerPhone" class="input-text" value="@booking.BookerPhone" />
+                                </div>
                             </div>
-                            <div class="dropdown-item">
-                                <h6>Email: </h6><span class="list-text">@booking.BookerEmail</span>
+
+                            <!-- DETAILS -->
+                            <div class="dropdown-content">
+                                <h4>Details</h4>
+                                <div class="dropdown-item">
+                                    <label for="TableName">Table:</label>
+                                    <input type="text" name="TableName" id="TableName" value="@booking.TableName" disabled readonly />
+                                    <input type="hidden" name="TableId" value="@booking.TableId" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="CreatedDate">Created at:</label>
+                                    <input type="datetime-local" name="CreatedDate" id="CreatedDate" value="@booking.CreatedDate.ToString("yyyy-MM-ddTHH:mm")" readonly />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="BookingStartTime">Booking start time:</label>
+                                    <input type="datetime-local" name="BookingStartTime" id="BookingStartTime" value="@booking.BookingStartTime.ToString("yyyy-MM-ddTHH:mm")" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="BookingEndTime">Booking finish time:</label>
+                                    <input type="datetime-local" name="BookingEndTime" id="BookingEndTime" value="@booking.BookingEndTime.ToString("yyyy-MM-ddTHH:mm")" />
+                                </div>
                             </div>
-                            <div class="dropdown-item">
-                               <h6>Phone: </h6><span class="list-text">@booking.BookerPhone</span>
+
+                            <!-- ALLERGIES -->
+                            <div class="dropdown-content">
+                                <h4>Allergies</h4>
+                                <div class="dropdown-item">
+                                    <label for="Vegan">Vegan:</label>
+                                    <input type="number" name="Vegan" id="Vegan" value="@booking.Vegan" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="Vegetarian">Vegetarian:</label>
+                                    <input type="number" name="Vegetarian" id="Vegetarian" value="@booking.Vegetarian" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="Gluten">Gluten:</label>
+                                    <input type="number" name="Gluten" id="Gluten" value="@booking.Gluten" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="Milk">Milk:</label>
+                                    <input type="number" name="Milk" id="Milk" value="@booking.Milk" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="Lactose">Lactose:</label>
+                                    <input type="number" name="Lactose" id="Lactose" value="@booking.Lactose" />
+                                </div>
+                                <div class="dropdown-item">
+                                    <label for="Eggs">Eggs:</label>
+                                    <input type="number" name="Eggs" id="Eggs" value="@booking.Eggs" />
+                                </div>
                             </div>
-                            
+
+                            <!-- SPECIAL REQUESTS -->
+                            <div class="dropdown-content">
+                                <h4>Special requests</h4>
+                                <textarea name="SpecialRequests" id="SpecialRequests">@booking.SpecialRequests</textarea>
+
+                                <div class="form-buttons">
+                                    <button type="submit" name="action" value="update" class="btn btn-transparent">Save changes</button>
+                                    <button type="submit" name="action" value="delete" class="btn btn-red">Delete</button>
+                                </div>
+                            </div>
+
                         </div>
-
-                        <div class="dropdown-content">
-
-                            <h4>Details</h4>
-                            <div class="dropdown-item">
-                                <h6>Table: </h6><span class="list-text">@booking.TableName</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Created at: </h6><span class="date">@booking.CreatedDate</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Booking start time: </h6><span class="date">@booking.BookingStartTime</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Booking finish time: </h6><span class="date">@booking.BookingEndTime</span>
-                            </div>
-                            
-                        </div>
-
-                        <div class="dropdown-content">
-                            <h4>Allergies</h4>
-                            <div class="dropdown-item">
-                                <h6>Vegan: </h6><span>@booking.Vegan</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Vegetarian: </h6><span>@booking.Vegetarian</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Gluten: </h6><span>@booking.Gluten</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Milk: </h6><span>@booking.Milk</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Lactose: </h6><span>@booking.Lactose</span>
-                            </div>
-                            <div class="dropdown-item">
-                                <h6>Eggs: </h6><span>@booking.Eggs</span>
-                            </div>
-                        </div>
-
-                        <div class="dropdown-content">
-                            <h4>Special requests</h4>
-                            <h6>Request: </h6><span>@booking.SpecialRequests</span>
-                            <button class="btn btn-secondary">Edit booking<i class="fa-solid fa-pen-to-square"></i></button>
-                        </div>
-
-                    </div>
+                    </form>
 
                 </div>
             }
@@ -130,7 +152,7 @@
                         @for (int i = 1; i < 13; i++) // 14 kolumner (per h), ingen linje vid 0%
                         {
                             var left = (i / 13.0) * 100;
-                            <div class="time-divider" style="left:@left.ToString(CultureInfo.InvariantCulture)%"></div>
+                            <div class="time-divider" style="left:@($"{left.ToString(CultureInfo.InvariantCulture)}%")"></div>
                         }
 
                         @foreach (var booking in table.Bookings)
@@ -150,8 +172,7 @@
                             var startPercent = ((clampedStart - timelineStart) / timelineDuration) * 100;
                             var widthPercent = ((clampedEnd - clampedStart) / timelineDuration) * 100;
 
-                            <div class="booking-block"
-                                    style="left:@startPercent.ToString(CultureInfo.InvariantCulture)%; width:@widthPercent.ToString(CultureInfo.InvariantCulture)%;">
+                            <div class="booking-block" style="left:@($"{startPercent.ToString(CultureInfo.InvariantCulture)}%"); width:@($"{widthPercent.ToString(CultureInfo.InvariantCulture)}%");">
                                 @booking.BookerName
                             </div>
                         }

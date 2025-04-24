@@ -234,8 +234,9 @@ section {
   color: var(--color-light);
 }
 .btn-transparent:hover {
-  border-color: var(--color-theme);
-  color: var(--color-theme);
+  background-color: transparent;
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 .btn-black {
@@ -247,6 +248,17 @@ section {
   background-color: transparent;
   border-color: var(--color-dark);
   color: var(--color-dark);
+}
+
+.btn-red {
+  background-color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  color: var(--color-dark);
+}
+.btn-red:hover {
+  background-color: transparent;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
 }
 
 .btn-square {
@@ -411,7 +423,7 @@ footer .container .link-container {
 .booking-section .container .booking-list .booking-list-item .booking-dropdown {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 3rem;
   background-color: var(--color-coal);
   padding: 2rem;
   margin-bottom: 2rem;
@@ -421,14 +433,27 @@ footer .container .link-container {
 .booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 .booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content .dropdown-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
 }
-.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content .btn {
-  margin-top: 4rem;
+.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content input, .booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content textarea {
+  font-family: "Inter", sans-serif;
+  color: var(--color-light);
+  background-color: transparent;
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content input {
+  width: 60%;
+}
+.booking-section .container .booking-list .booking-list-item .booking-dropdown .dropdown-content textarea {
+  height: 100%;
+  resize: none;
 }
 .booking-section .container .table-list .timeline-header {
   display: grid;
