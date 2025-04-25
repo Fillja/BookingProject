@@ -16,25 +16,34 @@ public class BookingController(IBookingService bookingService, ITableService tab
     {
         var bookingModel = new BookingViewModel();
 
+        if (TempData["DisplayMessage"] is string displayMessage && !string.IsNullOrWhiteSpace(displayMessage))
+            bookingModel.DisplayMessage = displayMessage;
+
+        if (TempData["ErrorMessage"] is string errorMessage && !string.IsNullOrWhiteSpace(errorMessage))
+            bookingModel.ErrorMessage = errorMessage;
+
+
         var tableListResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant1");
         if (tableListResult.HasFailed)
         {
-            bookingModel.ErrorMessage = tableListResult.Message;
-            return View(bookingModel);
+            bookingModel.ErrorMessage += "\nError fetching tables: " + tableListResult.Message;
         }
+        else
+        {
+            bookingModel.Tables = ((List<TableModel>)tableListResult.Content!).OrderBy(x => x.Name).ToList();
+        }
+            
 
         var bookingListResult = await _bookingService.GetAllBookingsAsync("Restaurant1");
         if (bookingListResult.HasFailed)
         {
-            bookingModel.ErrorMessage = bookingListResult.Message;
-            return View(bookingModel);
+            bookingModel.ErrorMessage += "\nError fetching bookings: " + bookingListResult.Message;
         }
-
-        var tableList = ((List<TableModel>)tableListResult.Content!).OrderBy(x => x.Name).ToList();
-        var bookingList = ((List<BookingModel>)bookingListResult.Content!).OrderBy(x => x.BookingStartTime).ToList();
-
-        bookingModel.Tables = tableList;
-        bookingModel.Bookings = bookingList;
+        else
+        {
+            bookingModel.Bookings = ((List<BookingModel>)bookingListResult.Content!).OrderBy(x => x.BookingStartTime).ToList();
+        }
+            
 
         return View(bookingModel);
     }
@@ -42,22 +51,36 @@ public class BookingController(IBookingService bookingService, ITableService tab
     [HttpPost]
     public async Task<IActionResult> EditBooking(BookingModel model, string action)
     {
-        TempData["DisplayMessage"] = "You must fill out all the necessary fields!";
-
         if (ModelState.IsValid) 
         {
             if (action == "update")
             {
                 var updateResult = await _bookingService.UpdateBookingAsync(model.Id!, model);
-                TempData["DisplayMessage"] = updateResult.Message;
+                if (updateResult.HasFailed)
+                {
+                    this.SetError(updateResult.Message!);
+                }
+                else
+                {
+                    this.SetSuccess(updateResult.Message!);
+                }
             }
             else if (action == "delete")
             {
                 var deleteResult = await _bookingRepository.DeleteAsync(x => x.Id == model.Id);
-                TempData["DisplayMessage"] = deleteResult.Message;
+                if (deleteResult.HasFailed)
+                {
+                    this.SetError(deleteResult.Message!);
+                }
+                else
+                {
+                    this.SetSuccess(deleteResult.Message!);
+                }
             }
-
-            return RedirectToAction("Index");
+        }
+        else
+        {
+            this.SetError("You must fill out all the necessary fields!");
         }
 
         return RedirectToAction("Index");

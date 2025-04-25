@@ -6,10 +6,69 @@
 <section class="booking-section">
 
     <div class="container">
+        @if(!string.IsNullOrEmpty(Model.ErrorMessage)){
+            <span class="danger">@Model.ErrorMessage</span>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.DisplayMessage))
+        {
+            <span class="success">@Model.DisplayMessage</span>
+        }
+
+
+        <div class="table-list">
+
+            <h2>Today's bookings</h2>
+
+            <div class="timeline-header">
+                @for (int hour = 9; hour <= 21; hour++)  // Tidtabell - 09:00 till 22:00
+                {
+                    <span>@hour:00</span>
+                }
+            </div>
+            @foreach (var table in Model.Tables)
+            {
+                <div class="table-list-item">
+                    <span class="table-name">@table.Name</span>
+
+                    <div class="booking-timeline">
+
+                        @for (int i = 1; i <= 13; i++) // 13 dividers mellan 14 hours
+                        {
+                            var left = (i / 13.0) * 100;
+                            <div class="time-divider" style="left:@($"{left.ToString(CultureInfo.InvariantCulture)}%")"></div>
+                        }
+
+                        @foreach (var booking in table.Bookings.Where(b => b.BookingStartTime.Day == DateTime.Now.Day))
+                        {
+                            var startMinutes = booking.BookingStartTime.TimeOfDay.TotalMinutes;
+                            var endMinutes = booking.BookingEndTime.TimeOfDay.TotalMinutes;
+
+                            var timelineStart = 540.0; // 09:00 i minuter (9*60)
+                            var timelineEnd = 1320.0;  // 22:00 i minuter (22*60)
+                            var timelineDuration = timelineEnd - timelineStart;
+
+                            // Forcerar bokningar att vara innanför spannet 09-22 med hjälp av minuter
+                            var clampedStart = Math.Max(startMinutes, timelineStart);
+                            var clampedEnd = Math.Min(endMinutes, timelineEnd);
+
+                            // CSS left-start % och width %
+                            var startPercent = Math.Round(((clampedStart - timelineStart) / timelineDuration) * 100, 3);
+                            var widthPercent = Math.Round(((clampedEnd - clampedStart) / timelineDuration) * 100, 3);
+
+                            <div class="booking-block" style="left:@($"{startPercent.ToString(CultureInfo.InvariantCulture)}%"); width:@($"{widthPercent.ToString(CultureInfo.InvariantCulture)}%");">
+                                @booking.BookerName
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            }
+        </div>
 
         <div class="booking-list">
 
-            <h2>Bookings</h2>
+            <h2>Coming bookings</h2>
 
             <div class="booking-list-header">
                 <span>Table</span>
@@ -37,11 +96,12 @@
                         <span class="date">@booking.BookingStartTime</span>
                         <span class="date">@booking.BookingEndTime</span>
                     </div>
-                    <button onclick="openDropdown(@listId)" class="btn-square dropdown-button"><i class="fa-solid fa-caret-down"></i></button>
+                    <button type="button" onclick="openDropdown(@listId)" class="btn-square dropdown-button"><i class="fa-solid fa-caret-down"></i></button>
 
-                    <form method="post" asp-controller="Booking" asp-action="EditBooking">
+                    <form method="post" asp-controller="Booking" asp-action="EditBooking" id="bookingForm-@listId">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="Id" value="@booking.Id" />
+                        <input type="hidden" name="action" value="update" />
 
                         <div id="dropdown-@listId" class="booking-dropdown hidden">
 
@@ -50,7 +110,7 @@
                                 <h4>Booker</h4>
                                 <div class="dropdown-item">
                                     <label for="BookerName">Name:</label>
-                                    <input type="text" name="BookerName" id="BookerName" class="input-text" value="@booking.BookerName" />
+                                    <input type="text" name="BookerName" id="BookerName-@listId" class="input-text" value="@booking.BookerName" />
                                 </div>
                                 <div class="dropdown-item">
                                     <label for="BookerEmail">Email:</label>
@@ -119,8 +179,8 @@
                                 <textarea name="SpecialRequests" id="SpecialRequests">@booking.SpecialRequests</textarea>
 
                                 <div class="form-buttons">
-                                    <button type="submit" name="action" value="update" class="btn btn-transparent">Save changes</button>
-                                    <button type="submit" name="action" value="delete" class="btn btn-red">Delete</button>
+                                    <button type="submit" name="action" value="update" class="btn btn-light">Save changes</button>
+                                    <button type="button" onclick="confirmDelete(@listId, event)" class="btn btn-red">Delete</button>
                                 </div>
                             </div>
 
@@ -132,58 +192,9 @@
 
         </div>
 
-        <div class="table-list">
-
-            <h2>Tables</h2>
-
-            <div class="timeline-header">
-                @for (int hour = 9; hour <= 22; hour++)  // Tidtabell - 09:00 till 22:00
-                {
-                    <span>@hour:00</span>
-                }
-            </div>
-            @foreach(var table in Model.Tables)
-            {
-                <div class="table-list-item">
-                    <span class="table-name">@table.Name</span>
-
-                    <div class="booking-timeline">
-
-                        @for (int i = 1; i < 13; i++) // 14 kolumner (per h), ingen linje vid 0%
-                        {
-                            var left = (i / 13.0) * 100;
-                            <div class="time-divider" style="left:@($"{left.ToString(CultureInfo.InvariantCulture)}%")"></div>
-                        }
-
-                        @foreach (var booking in table.Bookings)
-                        {
-                            var startMinutes = booking.BookingStartTime.TimeOfDay.TotalMinutes;
-                            var endMinutes = booking.BookingEndTime.TimeOfDay.TotalMinutes;
-
-                            var timelineStart = 540.0; // 09:00 i minuter (9*60)
-                            var timelineEnd = 1320.0;  // 22:00 i minuter (22*60)
-                            var timelineDuration = timelineEnd - timelineStart;
-
-                            // Forcerar bokningar att vara innanför spannet 09-22 med hjälp av minuter
-                            var clampedStart = Math.Max(startMinutes, timelineStart);
-                            var clampedEnd = Math.Min(endMinutes, timelineEnd);
-
-                            // CSS left-start % och width %
-                            var startPercent = ((clampedStart - timelineStart) / timelineDuration) * 100;
-                            var widthPercent = ((clampedEnd - clampedStart) / timelineDuration) * 100;
-
-                            <div class="booking-block" style="left:@($"{startPercent.ToString(CultureInfo.InvariantCulture)}%"); width:@($"{widthPercent.ToString(CultureInfo.InvariantCulture)}%");">
-                                @booking.BookerName
-                            </div>
-                        }
-                    </div>
-
-                </div>
-            }
-        </div>
-
     </div>
 
 </section>
 
 @await Html.PartialAsync("_DropdownScriptPartial")
+@await Html.PartialAsync("_ConfirmDeleteScriptPartial")

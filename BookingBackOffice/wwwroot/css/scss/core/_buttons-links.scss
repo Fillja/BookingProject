@@ -72,9 +72,9 @@
     color: var(--color-light);
 
     &:hover {
-        background-color: transparent;
-        border-color: var(--color-secondary);
-        color: var(--color-secondary);
+        background-color: var(--color-light);
+        border-color: var(--color-light);
+        color: var(--color-dark);
     }
 }
 
@@ -87,6 +87,18 @@
         background-color: transparent;
         border-color: var(--color-dark);
         color: var(--color-dark);
+    }
+}
+
+.btn-light {
+    background-color: var(--color-light);
+    border: 1px solid var(--color-light);
+    color: var(--color-dark);
+
+    &:hover {
+        background-color: transparent;
+        border-color: var(--color-light);
+        color: var(--color-light);
     }
 }
 

@@ -234,9 +234,9 @@ section {
   color: var(--color-light);
 }
 .btn-transparent:hover {
-  background-color: transparent;
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
+  background-color: var(--color-light);
+  border-color: var(--color-light);
+  color: var(--color-dark);
 }
 
 .btn-black {
@@ -248,6 +248,17 @@ section {
   background-color: transparent;
   border-color: var(--color-dark);
   color: var(--color-dark);
+}
+
+.btn-light {
+  background-color: var(--color-light);
+  border: 1px solid var(--color-light);
+  color: var(--color-dark);
+}
+.btn-light:hover {
+  background-color: transparent;
+  border-color: var(--color-light);
+  color: var(--color-light);
 }
 
 .btn-red {
@@ -385,6 +396,9 @@ footer .container .link-container {
   flex-direction: column;
   gap: 5rem;
 }
+.booking-section .container h2 {
+  margin-bottom: 2rem;
+}
 .booking-section .container .booking-list .booking-list-header {
   display: grid;
   grid-template-columns: 0.8fr 1.5fr 1.9fr 1fr 1.2fr 1.2fr 1.2fr;
@@ -457,7 +471,7 @@ footer .container .link-container {
 }
 .booking-section .container .table-list .timeline-header {
   display: grid;
-  grid-template-columns: repeat(14, 1fr);
+  grid-template-columns: repeat(13, 1fr);
   font-size: 0.8rem;
   padding-left: 8rem;
   margin-bottom: 0.5rem;
