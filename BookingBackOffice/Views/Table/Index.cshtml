@@ -1,4 +1,6 @@
-﻿@{
+﻿@model TableViewModel
+@{
+    ViewData["Title"] = Model.Title;
 }
 
-<h1>TABLE INDEX</h1>
+@await Html.PartialAsync("~/Views/Shared/Sections/TableSections/_tablesLayout.cshtml")

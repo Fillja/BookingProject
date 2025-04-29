@@ -9,6 +9,8 @@ public class TableEntity
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Name { get; set; }
     public int Size { get; set; }
+    public float TopAlignment { get; set; }
+    public float LeftAlignment { get; set; }
 
     public string RestaurantId { get; set; } = null!;
 

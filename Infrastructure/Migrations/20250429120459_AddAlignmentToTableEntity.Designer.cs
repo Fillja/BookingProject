@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250429120459_AddAlignmentToTableEntity")]
+    partial class AddAlignmentToTableEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,9 +106,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<float>("LeftAlignment")
-                        .HasColumnType("real");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -116,7 +116,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
-                    b.Property<float>("TopAlignment")
+                    b.Property<float>("leftAlignment")
+                        .HasColumnType("real");
+
+                    b.Property<float>("topAlignment")
                         .HasColumnType("real");
 
                     b.HasKey("Id");

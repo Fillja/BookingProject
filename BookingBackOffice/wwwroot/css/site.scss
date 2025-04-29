@@ -1,16 +1,19 @@
 ﻿// CORE IMPORTS
-@import 'scss/core/_mixins.scss';
-@import 'scss/core/_colors.scss';
-@import 'scss/core/_base.scss';
-@import 'scss/core/_buttons-links.scss';
-@import 'scss/core/_typography.scss';
+@import './scss/core/_mixins.scss';
+@import './scss/core/_colors.scss';
+@import './scss/core/_base.scss';
+@import './scss/core/_buttons-links.scss';
+@import './scss/core/_typography.scss';
 
 // SECTION IMPORTS
-@import 'scss/sections/_header.scss';
-@import 'scss/sections/_footer.scss';
+@import './scss/sections/_header.scss';
+@import './scss/sections/_footer.scss';
 
 // HOME
-@import 'scss/sections/home/_summarySection.scss';
+@import './scss/sections/home/_summarySection.scss';
 
 // BOOKING
-@import 'scss/sections/booking/_bookingSection.scss';
+@import './scss/sections/booking/_bookingSection.scss';
+
+// TABLES
+@import './scss/sections/table/_tableLayoutSection.scss';

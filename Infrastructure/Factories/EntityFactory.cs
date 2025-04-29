@@ -43,6 +43,8 @@ public static class EntityFactory
             RestaurantId = tableEntity.RestaurantId,
             Name = tableEntity.Name,
             Size = tableEntity.Size,
+            TopAlignment = tableEntity.TopAlignment,
+            LeftAlignment = tableEntity.LeftAlignment,
             Bookings = tableEntity.Bookings?.Select(booking => new BookingSlotModel
             {
                 Id = booking.Id,
@@ -59,6 +61,8 @@ public static class EntityFactory
     {
         tableEntity.Name = tableModel.Name;
         tableEntity.Size = tableModel.Size;
+        tableEntity.TopAlignment = tableModel.TopAlignment;
+        tableEntity.LeftAlignment = tableModel.LeftAlignment;
 
         return tableEntity;
     }

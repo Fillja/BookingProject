@@ -1,0 +1,41 @@
+﻿.table-layout-section {
+
+    .container {
+        h2 {
+            margin-bottom: 2rem;
+        }
+    }
+
+    .restaurant-image {
+        position: relative;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .table {
+            display: inline-block;
+            color: var(--color-light);
+
+
+            &:hover {
+                .fa-solid {
+                    color: var(--color-secondary);
+                }
+            }
+
+            .fa-solid {
+                transition: all 0.25s ease-in-out;
+            }
+
+            .fa-circle {
+                font-size: 4rem;
+
+                .fa-circle-dot {
+                    font-size: 1.5rem;
+                }
+            }
+        }
+    }
+}

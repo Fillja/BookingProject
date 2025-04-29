@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250417105149_RefactoredEverythingHomePc")]
-    partial class RefactoredEverythingHomePc
+    [Migration("20250429121527_NameChangeAlignment")]
+    partial class NameChangeAlignment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,6 +106,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<float>("LeftAlignment")
+                        .HasColumnType("real");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -115,6 +118,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("Size")
                         .HasColumnType("int");
+
+                    b.Property<float>("TopAlignment")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

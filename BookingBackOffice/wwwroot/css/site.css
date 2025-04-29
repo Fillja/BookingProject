@@ -515,3 +515,30 @@ footer .container .link-container {
   display: flex;
   align-items: center;
 }
+
+.table-layout-section .container h2 {
+  margin-bottom: 2rem;
+}
+.table-layout-section .restaurant-image {
+  position: relative;
+}
+.table-layout-section .restaurant-image img {
+  width: 100%;
+  height: 100%;
+}
+.table-layout-section .restaurant-image .table {
+  display: inline-block;
+  color: var(--color-light);
+}
+.table-layout-section .restaurant-image .table:hover .fa-solid {
+  color: var(--color-secondary);
+}
+.table-layout-section .restaurant-image .table .fa-solid {
+  transition: all 0.25s ease-in-out;
+}
+.table-layout-section .restaurant-image .table .fa-circle {
+  font-size: 4rem;
+}
+.table-layout-section .restaurant-image .table .fa-circle .fa-circle-dot {
+  font-size: 1.5rem;
+}
