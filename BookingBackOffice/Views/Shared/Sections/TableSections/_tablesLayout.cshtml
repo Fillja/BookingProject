@@ -25,17 +25,19 @@
             @for (int i = 0; i < Model.Tables.Count; i++)
             {
                 var table = Model.Tables[i];
+
                 <div id="table-@table.Id"
                      class="table"
                      draggable="true"
                      style="position: absolute; top:@($"{table.TopAlignment.ToString(CultureInfo.InvariantCulture)}%"); left:@($"{table.LeftAlignment.ToString(CultureInfo.InvariantCulture)}%");">
 
-                    <i class="fa-solid fa-circle">
+                    <div class="table-wrap">
+                        <i class="fa-solid fa-circle table-icon"></i>
                         @for (int j = 0; j < table.Size; j++)
                         {
-                            <i class="fa-solid fa-circle-dot"></i>
+                            <i class="fa-solid fa-circle-dot chair-icon" style="--index:@j; --count:@table.Size;"></i>
                         }
-                    </i>
+                    </div>
 
                     <input type="hidden" name="Tables[@i].Id" value="@table.Id" />
                     <input type="hidden" name="Tables[@i].TopAlignment" id="top-@table.Id" value="@table.TopAlignment" />
@@ -46,7 +48,7 @@
             }
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Layout</button>
+        <button type="submit" class="btn btn-secondary">Save Layout</button>
     </form>
 
 </section>
