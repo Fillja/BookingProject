@@ -1,0 +1,30 @@
+﻿@model SignInViewModel
+
+<section class="sign-in-section">
+
+    <div class="container">
+
+        <h2>Sign in</h2>
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <span class="danger">@Model.ErrorMessage</span>
+        }
+
+        <form method="post" asp-controller="Account" asp-action="SubmitSignIn" novalidate>
+            <div class="signup-input-wrapper">
+                <label asp-for="@Model.SignInModel.Email"></label>
+                <span asp-validation-for="@Model.SignInModel.Email"></span>
+                <input class="input-box" asp-for="@Model.SignInModel.Email">
+            </div>
+            <div class="signup-input-wrapper">
+                <label asp-for="@Model.SignInModel.Password"></label>
+                <span asp-validation-for="@Model.SignInModel.Password"></span>
+                <input class="input-box" asp-for="@Model.SignInModel.Password">
+            </div>
+
+            <button type="submit" class="btn btn-secondary">@Model.Title</button>
+        </form>
+
+    </div>
+
+</section>

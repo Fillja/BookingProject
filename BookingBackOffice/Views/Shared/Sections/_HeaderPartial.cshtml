@@ -14,8 +14,14 @@
         </nav>
 
         <div class="account-container">
-            <a class="icon-wrapper" asp-controller="Account" asp-action="Index"><i class="fa-solid fa-user"></i></a>
-            <a class="icon-wrapper" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            @if (User.Identity!.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    <a class="icon-wrapper" asp-controller="Account" asp-action="SignUp"><i class="fa-solid fa-user"></i></a>
+                }
+                <a class="icon-wrapper" asp-controller="Account" asp-action="LogOut"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            }
         </div>
     </div>
 </header>

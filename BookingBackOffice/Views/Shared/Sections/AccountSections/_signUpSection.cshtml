@@ -1,0 +1,40 @@
+﻿@model SignUpViewModel
+@{
+}
+
+<section class="sign-up-section">
+    <div class="container">
+
+        <h2>Create Account</h2>
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <span class="danger">@Model.ErrorMessage</span>
+        }
+
+        <form method="post" asp-controller="Account" asp-action="SubmitSignUp" novalidate>
+            <div class="signup-input-wrapper">
+                <label asp-for="@Model.SignUpModel.Email"></label>
+                <span asp-validation-for="@Model.SignUpModel.Email"></span>
+                <input class="input-box" asp-for="@Model.SignUpModel.Email">
+            </div>
+            <div class="signup-input-wrapper">
+                <label asp-for="@Model.SignUpModel.Password"></label>
+                <span asp-validation-for="@Model.SignUpModel.Password"></span>
+                <input class="input-box" asp-for="@Model.SignUpModel.Password">
+            </div>
+            <div class="signup-input-wrapper">
+                <label asp-for="@Model.SignUpModel.ConfirmPassword"></label>
+                <span asp-validation-for="@Model.SignUpModel.ConfirmPassword"></span>
+                <input class="input-box" asp-for="@Model.SignUpModel.ConfirmPassword">
+            </div>
+            <div class="signup-input-wrapper">
+                <label asp-for="@Model.SignUpModel.RestaurantId"></label>
+                <span asp-validation-for="@Model.SignUpModel.RestaurantId"></span>
+                <input class="input-box" asp-for="@Model.SignUpModel.RestaurantId">
+            </div>
+
+            <button type="submit" class="btn btn-secondary">@Model.Title</button>
+        </form>
+
+    </div>
+</section>

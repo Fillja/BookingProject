@@ -28,7 +28,7 @@
     cursor: pointer;
     font-size: 1.5rem;
     font-weight: 600;
-    border-radius: 3px;
+    border-radius: 10px;
     padding: 15px 40px;
     font-size: 16px;
     transition: all 0.25s ease-in-out;
@@ -39,7 +39,6 @@
         margin-left: .5rem;
     }
 }
-
 
 
 .btn-theme {
@@ -60,9 +59,9 @@
     color: var(--color-dark);
 
     &:hover {
-        background-color: var(--color-dark);
-        border-color: var(--color-dark);
-        color: var(--color-light);
+        background-color: transparent;
+        border-color: var(--color-secondary);
+        color: var(--color-secondary);
     }
 }
 
@@ -117,16 +116,18 @@
 
 .btn-square {
     background-color: var(--color-secondary);
+    border: 1px solid var(--color-secondary);
     color: var(--color-dark);
     display: inline-block;
     cursor: pointer;
     border-radius: 3px;
-    border: none;
     padding: 5px;
     transition: all 0.25s ease-in-out;
     text-decoration: none;
 
     &:hover {
-        background-color: var(--color-light);
+        background-color: transparent;
+        border-color: var(--color-secondary);
+        color: var(--color-secondary);
     }
 }

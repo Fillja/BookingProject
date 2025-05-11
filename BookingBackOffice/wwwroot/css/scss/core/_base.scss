@@ -65,6 +65,11 @@ section{
     }
 }
 
+input:focus {
+    outline: none;
+    border-color: var(--color-theme);
+}
+
 //GENERIC COMPONENTS
 .icon-wrapper {
     i {

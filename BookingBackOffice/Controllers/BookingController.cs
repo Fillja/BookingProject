@@ -2,10 +2,12 @@
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers;
 
+[Authorize]
 public class BookingController(IBookingService bookingService, ITableService tableService, BookingRepository bookingRepository) : Controller
 {
     private readonly IBookingService _bookingService = bookingService;

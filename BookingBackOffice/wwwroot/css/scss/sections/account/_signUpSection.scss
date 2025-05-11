@@ -1,0 +1,47 @@
+﻿.sign-up-section {
+    padding: 6rem 2rem;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        max-width: 600px;
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+
+            .signup-input-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                label {
+                    font-weight: 600;
+                }
+
+                span {
+                    font-size: 0.8rem;
+                    color: var(--color-danger);
+                }
+
+                input {
+                    padding: 0.75rem 1rem;
+                    border-radius: 10px;
+                    background-color: var(--color-coal);
+                    color: var(--color-light);
+                    font-family: "Inter", sans-serif;
+                }
+            }
+
+            .btn-secondary {
+                align-self: flex-start;
+            }
+        }
+    }
+}

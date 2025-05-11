@@ -1,10 +1,12 @@
 ﻿using BookingBackOffice.Models;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers;
 
+[Authorize]
 public class TableController(ITableService tableService) : Controller
 {
     private readonly ITableService _tableService = tableService;

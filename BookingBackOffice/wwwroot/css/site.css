@@ -13,14 +13,17 @@
 
 .danger {
   color: var(--color-danger);
+  font-weight: bold;
 }
 
 .success {
   color: var(--color-success);
+  font-weight: bold;
 }
 
 .warning {
   color: var(--color-warning);
+  font-weight: bold;
 }
 
 .bg-light {
@@ -122,6 +125,11 @@ section {
   }
 }
 
+input:focus {
+  outline: none;
+  border-color: var(--color-theme);
+}
+
 .icon-wrapper i {
   font-size: 1.5rem;
   padding: 0.5rem;
@@ -195,7 +203,7 @@ section {
   cursor: pointer;
   font-size: 1.5rem;
   font-weight: 600;
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 15px 40px;
   font-size: 16px;
   transition: all 0.25s ease-in-out;
@@ -223,9 +231,9 @@ section {
   color: var(--color-dark);
 }
 .btn-secondary:hover {
-  background-color: var(--color-dark);
-  border-color: var(--color-dark);
-  color: var(--color-light);
+  background-color: transparent;
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 .btn-transparent {
@@ -274,17 +282,19 @@ section {
 
 .btn-square {
   background-color: var(--color-secondary);
+  border: 1px solid var(--color-secondary);
   color: var(--color-dark);
   display: inline-block;
   cursor: pointer;
   border-radius: 3px;
-  border: none;
   padding: 5px;
   transition: all 0.25s ease-in-out;
   text-decoration: none;
 }
 .btn-square:hover {
-  background-color: var(--color-light);
+  background-color: transparent;
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 html, body {
@@ -614,8 +624,8 @@ footer .container .link-container {
 .table-layout-section .custom-modal .custom-modal-content form .input-wrapper input {
   padding: 0.5rem;
   border-radius: 30px;
-  background-color: var(--color-gray);
-  border-color: var(--color-gray);
+  background-color: var(--color-coal);
+  color: var(--color-light);
 }
 .table-layout-section .custom-modal .close-modal {
   position: absolute;
@@ -627,4 +637,44 @@ footer .container .link-container {
 .table-layout-section .custom-modal .modal-actions {
   display: flex;
   justify-content: space-between;
+}
+
+.sign-up-section {
+  padding: 6rem 2rem;
+}
+.sign-up-section .container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 600px;
+}
+.sign-up-section .container h2 {
+  margin-bottom: 1rem;
+}
+.sign-up-section .container form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.sign-up-section .container form .signup-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sign-up-section .container form .signup-input-wrapper label {
+  font-weight: 600;
+}
+.sign-up-section .container form .signup-input-wrapper span {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+}
+.sign-up-section .container form .signup-input-wrapper input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background-color: var(--color-coal);
+  color: var(--color-light);
+  font-family: "Inter", sans-serif;
+}
+.sign-up-section .container form .btn-secondary {
+  align-self: flex-start;
 }
