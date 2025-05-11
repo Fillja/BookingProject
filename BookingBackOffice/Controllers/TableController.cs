@@ -52,4 +52,20 @@ public class TableController(ITableService tableService) : Controller
 
         return RedirectToAction("Index");
     }
+
+    public async Task<IActionResult> UpdateTable(TableModel model)
+    {
+        var updateResult = await _tableService.UpdateTableAsync(model.Id!, model);
+
+        if (updateResult.HasFailed)
+        {
+            this.SetError(updateResult.Message!);
+        }
+        else
+        {
+            this.SetSuccess(updateResult.Message!);
+        }
+
+        return RedirectToAction("Index");
+    }
 }

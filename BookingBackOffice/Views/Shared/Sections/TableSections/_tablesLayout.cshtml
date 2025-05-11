@@ -3,20 +3,17 @@
 
 <section class="table-layout-section">
 
-    <div class="container">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <span class="danger">@Model.ErrorMessage</span>
+    }
 
-        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-        {
-            <span class="danger">@Model.ErrorMessage</span>
-        }
+    @if (!string.IsNullOrEmpty(Model.DisplayMessage))
+    {
+        <span class="success">@Model.DisplayMessage</span>
+    }
 
-        @if (!string.IsNullOrEmpty(Model.DisplayMessage))
-        {
-            <span class="success">@Model.DisplayMessage</span>
-        }
-
-        <h2>Restaurant layout</h2>
-    </div>
+    <h2>Restaurant layout</h2>
 
     <form method="post" asp-controller="Table" asp-action="SaveLayout">
         <div class="restaurant-image">
@@ -30,6 +27,8 @@
                      class="table"
                      draggable="true"
                      style="position: absolute; top:@($"{table.TopAlignment.ToString(CultureInfo.InvariantCulture)}%"); left:@($"{table.LeftAlignment.ToString(CultureInfo.InvariantCulture)}%");">
+
+                    <button type="button" class="edit-button" onclick="openModal(this.closest('.table'))">✏️</button>
 
                     <div class="table-wrap">
                         <i class="fa-solid fa-circle table-icon"></i>
@@ -51,6 +50,43 @@
         <button type="submit" class="btn btn-secondary">Save Layout</button>
     </form>
 
+    <div id="editTableModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3>Edit Table</h3>
+            <form method="post" asp-controller="Table" asp-action="UpdateTable">
+                <input type="hidden" name="Id" id="edit-table-id" />
+
+                <div class="input-wrapper">
+                    <label for="edit-table-name">Table Name</label>
+                    <input type="text" name="Name" id="edit-table-name" required />
+                </div>
+
+                <div class="input-wrapper">
+                    <label for="edit-table-size">Size</label>
+                    <input type="number" name="Size" id="edit-table-size" min="2" max="20" required />
+                </div>
+
+                <div class="input-wrapper">
+                    <label for="edit-table-top">Top Alignment (%)</label>
+                    <input name="TopAlignment" id="edit-table-top" />
+                </div>
+
+                <div class="input-wrapper">
+
+                    <label for="edit-table-left">Left Alignment (%)</label>
+                    <input name="LeftAlignment" id="edit-table-left" />
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-square" type="submit">Save</button>
+                    <button class="btn btn-square" type="button" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </section>
 
 @await Html.PartialAsync("_DragTableScriptPartial")
+@await Html.PartialAsync("_TableModalScriptPartial")
