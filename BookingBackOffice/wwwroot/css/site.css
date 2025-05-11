@@ -639,17 +639,11 @@ footer .container .link-container {
   justify-content: space-between;
 }
 
-.sign-up-section {
-  padding: 6rem 2rem;
-}
 .sign-up-section .container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   max-width: 600px;
-}
-.sign-up-section .container h2 {
-  margin-bottom: 1rem;
 }
 .sign-up-section .container form {
   display: flex;
@@ -676,5 +670,39 @@ footer .container .link-container {
   font-family: "Inter", sans-serif;
 }
 .sign-up-section .container form .btn-secondary {
+  align-self: flex-start;
+}
+
+.sign-in-section .container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 600px;
+}
+.sign-in-section .container form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.sign-in-section .container form .signup-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sign-in-section .container form .signup-input-wrapper label {
+  font-weight: 600;
+}
+.sign-in-section .container form .signup-input-wrapper span {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+}
+.sign-in-section .container form .signup-input-wrapper input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background-color: var(--color-coal);
+  color: var(--color-light);
+  font-family: "Inter", sans-serif;
+}
+.sign-in-section .container form .btn-secondary {
   align-self: flex-start;
 }
