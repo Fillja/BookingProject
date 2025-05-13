@@ -1,7 +1,7 @@
-﻿@model HomeViewModel
-@{
+﻿@using System.Security.Claims
+@model HomeViewModel
+@inject UserManager<UserEntity> _userManager
 
-}
 <section class="summary-section">
 
     <div class="container">
@@ -39,6 +39,25 @@
             </div>
 
         </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if(userId != null)
+            {
+                var user = _userManager.FindByIdAsync(userId).Result;
+
+                <form class="restaurant-form" asp-controller="Home" asp-action="UpdateAdminRestaurant" method="post">
+                    <select name="restaurantId">
+                        @foreach (var restaurant in Model.Restaurants)
+                        {
+                            @: <option value="@restaurant.Id" @(restaurant.Id == user!.RestaurantId ? "selected" : "")>@restaurant.Name</option>
+                        }
+                    </select>
+                    <button class="btn btn-square">Save changes</button>
+                </form>
+            }
+        }
 
     </div>
 

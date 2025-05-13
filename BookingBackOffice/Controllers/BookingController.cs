@@ -1,21 +1,28 @@
 ﻿using BookingBackOffice.Models;
+using Infrastructure.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers;
 
 [Authorize]
-public class BookingController(IBookingService bookingService, ITableService tableService, BookingRepository bookingRepository) : Controller
+public class BookingController(IBookingService bookingService, ITableService tableService, BookingRepository bookingRepository, UserManager<UserEntity> userManager) : Controller
 {
     private readonly IBookingService _bookingService = bookingService;
     private readonly ITableService _tableService = tableService;
     private readonly BookingRepository _bookingRepository = bookingRepository;
+    private readonly UserManager<UserEntity> _userManager = userManager;
 
     public async Task<IActionResult> Index()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return RedirectToAction("SignIn", "Account");
+
         var bookingModel = new BookingViewModel();
 
         if (TempData["DisplayMessage"] is string displayMessage && !string.IsNullOrWhiteSpace(displayMessage))
@@ -25,7 +32,7 @@ public class BookingController(IBookingService bookingService, ITableService tab
             bookingModel.ErrorMessage = errorMessage;
 
 
-        var tableListResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant1");
+        var tableListResult = await _tableService.GetAllTablesWithBookingsAsync(user.RestaurantId);
         if (tableListResult.HasFailed)
         {
             bookingModel.ErrorMessage += "\nError fetching tables: " + tableListResult.Message;
@@ -36,7 +43,7 @@ public class BookingController(IBookingService bookingService, ITableService tab
         }
             
 
-        var bookingListResult = await _bookingService.GetAllBookingsAsync("Restaurant1");
+        var bookingListResult = await _bookingService.GetAllBookingsAsync(user.RestaurantId);
         if (bookingListResult.HasFailed)
         {
             bookingModel.ErrorMessage += "\nError fetching bookings: " + bookingListResult.Message;

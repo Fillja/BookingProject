@@ -1,18 +1,25 @@
 ﻿using BookingBackOffice.Models;
+using Infrastructure.Entities;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingBackOffice.Controllers;
 
 [Authorize]
-public class TableController(ITableService tableService) : Controller
+public class TableController(ITableService tableService, UserManager<UserEntity> userManager) : Controller
 {
     private readonly ITableService _tableService = tableService;
+    private readonly UserManager<UserEntity> _userManager = userManager;
 
     public async Task<IActionResult> Index()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return RedirectToAction("SignIn", "Account");
+
         var tablesModel = new TableViewModel();
 
         if (TempData["DisplayMessage"] is string displayMessage && !string.IsNullOrWhiteSpace(displayMessage))
@@ -21,7 +28,7 @@ public class TableController(ITableService tableService) : Controller
         if (TempData["ErrorMessage"] is string errorMessage && !string.IsNullOrWhiteSpace(errorMessage))
             tablesModel.ErrorMessage = errorMessage;
 
-        var tableResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant1");
+        var tableResult = await _tableService.GetAllTablesWithBookingsAsync(user.RestaurantId);
         if (tableResult.HasFailed)
         {
             tablesModel.ErrorMessage += "\nError fetching tables: " + tableResult.Message;

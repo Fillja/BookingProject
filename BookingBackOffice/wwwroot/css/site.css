@@ -400,6 +400,25 @@ footer .container .link-container {
     flex-direction: row;
   }
 }
+.summary-section .container .restaurant-form {
+  display: flex;
+  margin-top: 4rem;
+  justify-content: center;
+  gap: 2rem;
+}
+.summary-section .container .restaurant-form select {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 30px;
+  background-color: var(--color-coal);
+  color: var(--color-light);
+  border: 1px solid var(--color-light);
+  cursor: pointer;
+}
+.summary-section .container .restaurant-form select option {
+  background-color: var(--color-coal);
+  color: var(--color-light);
+}
 
 .booking-section .container {
   display: flex;
