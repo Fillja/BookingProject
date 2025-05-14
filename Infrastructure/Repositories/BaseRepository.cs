@@ -31,24 +31,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
-    public virtual async Task<ResponseResult> CreateMultipleAsync(IEnumerable<TEntity> entityList)
-    {
-        try
-        {
-            foreach (var entity in entityList) 
-            {
-                _context.Add(entity);
-            }
-            var result = await _context.SaveChangesAsync();
-
-            return ResponseResult.Result(0, $"Successfully created {result} entities.", entityList);
-        }
-        catch (Exception ex)
-        {
-            return ResponseResult.Result(1, ex.Message);
-        }
-    }
-
     //GetAll that is used when no restaurant has to be declared
     public virtual async Task<ResponseResult> GetAllAsync()
     {
@@ -116,22 +98,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
         }
     }
 
-    //Deletes a supplied entity
-    public virtual async Task<ResponseResult> DeleteAsync(TEntity entity)
-    {
-        try
-        {
-            _context.Remove(entity);
-            await _context.SaveChangesAsync();
-
-            return ResponseResult.Result(0, "Successfully deleted.");
-        }
-        catch (Exception ex)
-        {
-            return ResponseResult.Result(1, ex.Message);
-        }
-    }
-
     //Deletes an entity based on a predicate 
     public virtual async Task<ResponseResult> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {
@@ -149,40 +115,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
 
             return ResponseResult.Result(0, "Successfully deleted.");
 
-        }
-        catch (Exception ex)
-        {
-            return ResponseResult.Result(1, ex.Message);
-        }
-    }
-
-    public virtual async Task<ResponseResult> DeleteMultipleAsync(IEnumerable<TEntity> entityList)
-    {
-        try
-        {
-            foreach(var entity in entityList)
-            {
-                _context.Remove(entity);
-            }
-            await _context.SaveChangesAsync();
-
-            return ResponseResult.Result(0, "Successfully deleted.");
-        }
-        catch (Exception ex)
-        {
-            return ResponseResult.Result(1, ex.Message);
-        }
-    }
-
-    public virtual async Task<ResponseResult> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
-    {
-        try
-        {
-            var existResult = await _context.Set<TEntity>().AnyAsync(predicate);
-            if (existResult)
-                return ResponseResult.Result(3, "Entity already exists.");
-
-            return ResponseResult.Result(0);
         }
         catch (Exception ex)
         {
