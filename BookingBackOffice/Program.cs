@@ -70,4 +70,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=SignIn}/{id?}");
 
+app.UseStatusCodePagesWithRedirects("/Home/Error");
+
 app.Run();

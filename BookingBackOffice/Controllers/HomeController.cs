@@ -77,6 +77,11 @@ public class HomeController(IBookingService bookingService, ITableService tableS
         return View(homeModel);
     }
 
+    public IActionResult Error()
+    {
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> UpdateAdminRestaurant(string restaurantId)
     {
