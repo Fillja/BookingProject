@@ -6,6 +6,7 @@ using Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BookingBackOffice.Controllers;
 
@@ -25,6 +26,11 @@ public class HomeController(IBookingService bookingService, ITableService tableS
 
         HomeViewModel homeModel = new HomeViewModel();
 
+        if (TempData["DisplayMessage"] is string displayMessage && !string.IsNullOrWhiteSpace(displayMessage))
+            homeModel.AdminMessage = displayMessage;
+
+        if (TempData["ErrorMessage"] is string errorMessage && !string.IsNullOrWhiteSpace(errorMessage))
+            homeModel.ErrorMessage = errorMessage;
 
         // Restaurant handling for user & admin
         ResponseResult restaurantListResult = await _restaurantService.GetAllRestaurantsAsync();
@@ -47,14 +53,14 @@ public class HomeController(IBookingService bookingService, ITableService tableS
 
 
         // Table & Booking amounts
-        ResponseResult tableListResult = await _tableService.GetAllTablesWithBookingsAsync("Restaurant1");
+        ResponseResult tableListResult = await _tableService.GetAllTablesWithBookingsAsync(user.RestaurantId);
         if (tableListResult.HasFailed)
         {
             homeModel.ErrorMessage = tableListResult.Message;
             return View(homeModel);
         }
 
-        ResponseResult bookingListResult = await _bookingService.GetAllBookingsAsync("Restaurant1");
+        ResponseResult bookingListResult = await _bookingService.GetAllBookingsAsync(user.RestaurantId);
         if (bookingListResult.HasFailed)
         {
             homeModel.ErrorMessage = bookingListResult.Message;
@@ -70,7 +76,8 @@ public class HomeController(IBookingService bookingService, ITableService tableS
 
         return View(homeModel);
     }
-    
+
+    [HttpPost]
     public async Task<IActionResult> UpdateAdminRestaurant(string restaurantId)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -79,6 +86,41 @@ public class HomeController(IBookingService bookingService, ITableService tableS
         
         user.RestaurantId = restaurantId;
         IdentityResult updateResult = await _userManager.UpdateAsync(user);
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateBooking(HomeViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+                var apiKey = config.GetValue<string>("ApiKey");
+
+                using var http = new HttpClient();
+                HttpResponseMessage response = await http.PostAsJsonAsync($"https://localhost:7130/api/booking/create?key={apiKey}", model.Booking);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    this.SetSuccess(await response.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    this.SetError(await response.Content.ReadAsStringAsync());
+                }
+            }
+            catch(Exception ex)
+            {
+                this.SetError(ex.Message);
+            }
+        }
+        else
+        {
+            this.SetError("Invalid fields");
+        }
 
         return RedirectToAction("Index");
     }

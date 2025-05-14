@@ -1,10 +1,12 @@
-﻿using Infrastructure.Interfaces;
+﻿using BookingApi.Filters;
+using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[UseApiKey]
 public class RestaurantController(IRestaurantService restaurantService) : ControllerBase
 {
     private readonly IRestaurantService _restaurantService = restaurantService;

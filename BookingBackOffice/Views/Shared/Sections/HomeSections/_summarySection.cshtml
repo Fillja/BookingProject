@@ -6,6 +6,16 @@
 
     <div class="container">
 
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <span class="danger">@Model.ErrorMessage</span>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.AdminMessage))
+        {
+            <span class="success">@Model.AdminMessage</span>
+        }
+
         <h1>Welcome @Model.RestaurantName!</h1>
 
         <div class="content-wrapper">
@@ -57,6 +67,82 @@
                     <button class="btn btn-square">Save changes</button>
                 </form>
             }
+
+            <form class="booking-form" asp-controller="Home" asp-action="CreateBooking" method="post">
+                <h3>Create booking</h3>
+                <input hidden asp-for="@Model.Booking.Id" />
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.CreatedDate"></label>
+                    <input asp-for="@Model.Booking.CreatedDate" type="datetime-local" value="@Model.Booking.CreatedDate.ToString("yyyy-MM-ddTHH:mm")"/>
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.BookingStartTime"></label>
+                    <input asp-for="@Model.Booking.BookingStartTime" type="datetime-local"  value="@Model.Booking.BookingStartTime.ToString("yyyy-MM-ddTHH:mm")"/>
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.BookingEndTime"></label>
+                    <input asp-for="@Model.Booking.BookingEndTime" type="datetime-local" value="@Model.Booking.BookingEndTime.ToString("yyyy-MM-ddTHH:mm")"/>
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.BookerName"></label>
+                    <input asp-for="@Model.Booking.BookerName" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.BookerEmail"></label>
+                    <input asp-for="@Model.Booking.BookerEmail" type="email" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.BookerPhone"></label>
+                    <input asp-for="@Model.Booking.BookerPhone" type="tel" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.Vegan"></label>
+                    <input asp-for="@Model.Booking.Vegan" type="number" min="0" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.Vegetarian"></label>
+                    <input asp-for="@Model.Booking.Vegetarian" type="number" min="0" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.Lactose"></label>
+                    <input asp-for="@Model.Booking.Lactose" type="number" min="0" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.Milk"></label>
+                    <input asp-for="@Model.Booking.Milk" type="number" min="0" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.Eggs"></label>
+                    <input asp-for="@Model.Booking.Eggs" type="number" min="0" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.Gluten"></label>
+                    <input asp-for="@Model.Booking.Gluten" type="number" min="0" />
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.SpecialRequests"></label>
+                    <textarea asp-for="@Model.Booking.SpecialRequests"></textarea>
+                </div>
+
+                <div class="input-wrapper">
+                    <label asp-for="@Model.Booking.TableId">Table ID</label>
+                    <input asp-for="@Model.Booking.TableId" />
+                </div>
+
+                <button type="submit" class="btn btn-secondary">Create Booking</button>
+            </form>
         }
 
     </div>

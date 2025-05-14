@@ -22,7 +22,20 @@ builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
+builder.Services.AddCors(x =>
+{
+    x.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://127.0.0.1:7193/")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
+
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();

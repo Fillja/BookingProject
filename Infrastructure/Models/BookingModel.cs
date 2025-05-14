@@ -6,11 +6,11 @@ public class BookingModel
 {
     public string? Id { get; set; }
     [Required]
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
     [Required]
-    public DateTime BookingStartTime { get; set; }
+    public DateTime BookingStartTime { get; set; } = DateTime.Now;
     [Required]
-    public DateTime BookingEndTime { get; set; }
+    public DateTime BookingEndTime { get; set; } = DateTime.Now;
     [Required]
     public string BookerName { get; set; } = null!;
     [Required]

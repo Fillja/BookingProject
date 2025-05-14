@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using BookingApi.Filters;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace BookingApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[UseApiKey]
 public class BookingController(BookingRepository bookingRepository, IBookingService bookingService) : ControllerBase
 {
     private readonly BookingRepository _bookingRepository = bookingRepository;
