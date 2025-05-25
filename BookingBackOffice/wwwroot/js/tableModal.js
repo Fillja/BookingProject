@@ -1,4 +1,5 @@
 ﻿function closeModal() {
+    console.log("Modal closed");
     document.getElementById("editTableModal").style.display = "none";
 }
 
@@ -14,12 +15,22 @@ function openModal(table) {
     document.getElementById("edit-table-size").value = size;
     document.getElementById("edit-table-top").value = top;
     document.getElementById("edit-table-left").value = left;
+    document.getElementById("delete-table-id").value = id;
+
+    console.log("Opening modal with values:", {
+        id: id,
+        name: name,
+        size: size,
+        top: top,
+        left: left,
+    });
 
     document.getElementById("editTableModal").style.display = "flex";
 }
 
-// Optional: Close modal when clicking outside content
+// Close modal when clicking outside content
 window.onclick = function (event) {
+    console.log("Modal closed");
     const modal = document.getElementById("editTableModal");
     if (event.target === modal) {
         closeModal();
