@@ -110,7 +110,7 @@ public class HomeController(IBookingService bookingService, ITableService tableS
 
                 if (response.IsSuccessStatusCode)
                 {
-                    this.SetSuccess(await response.Content.ReadAsStringAsync());
+                    this.SetSuccess("Booking created successfully.");
                 }
                 else
                 {
